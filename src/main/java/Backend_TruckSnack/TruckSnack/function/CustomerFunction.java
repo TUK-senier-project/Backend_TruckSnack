@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerFunction {
-
+    // customer_register_check Start
     public int customer_register_check(String id, String password , String name , String phone_number , String location){
         //logging 용 ..
 
@@ -215,9 +215,18 @@ public class CustomerFunction {
             check_flag = 1;
         }
 
+        //location check End
+        return check_flag;
+    }
+    // customer_register_check End
+
+    public int customer_login_check(String id , String password){
+        int check_flag=0;
+
+
+
 
         return check_flag;
     }
-    //location check End
 
 }

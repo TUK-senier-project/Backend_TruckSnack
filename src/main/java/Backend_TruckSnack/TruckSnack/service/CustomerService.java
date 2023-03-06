@@ -4,6 +4,7 @@ import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,10 +14,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerService {
-
     private final CustomerRepository customerRepository;
 
-    public String register_user_service(@RequestBody Customer customerData)throws IOException{
+    public String register_customer_service(@RequestBody Customer customerData)throws IOException{
         customerRepository.save(
                 Customer.builder()
                         .id(customerData.getId())
@@ -26,6 +26,12 @@ public class CustomerService {
                         .location(customerData.getLocation())
                         .build()
         );
+        return "Success";
+    }
+
+    public String login_customer_service(@RequestBody Customer customerData)throws IOException{
+        String customer_id = customerData.getId();
+        
         return "Success";
     }
 }

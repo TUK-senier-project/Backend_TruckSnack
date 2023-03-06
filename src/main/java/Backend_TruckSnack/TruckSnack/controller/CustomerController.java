@@ -25,8 +25,8 @@ public class CustomerController {
     }
 
     @ResponseBody
-    @PostMapping("/customer/login")
-    public ResponseEntity register_user(@RequestBody Customer customerData)throws IOException {
+    @PostMapping("/customer/register")
+    public ResponseEntity register_customer(@RequestBody Customer customerData)throws IOException {
         CustomerFunction customerFunction = new CustomerFunction();
 
         int check_flag = 0; // 성공시 0 실패시 1
@@ -41,14 +41,29 @@ public class CustomerController {
         );
         if(check_flag == 0){
             log.info("회원가입이 시작됩니다.");
-            if (customerService.register_user_service(customerData).equals("Success")) {
+            if (customerService.register_customer_service(customerData).equals("Success")) {
                 log.info("회원가입이 성공하였습니다.");
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         }
         else{
+            log.info("회원가입을 위한 값 오류 확인");
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseBody
+    @PostMapping("/customer/login")
+    public ResponseEntity login_customer(@RequestBody Customer customerData)throws IOException{
+        CustomerFunction customerFunction = new CustomerFunction();
+
+        int check_flag = 0; // 성공시 0 실패시 1
+        log.info("id={}, password={}"
+                , customerData.getId() , customerData.getPassword()
+        );
+
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
 }
