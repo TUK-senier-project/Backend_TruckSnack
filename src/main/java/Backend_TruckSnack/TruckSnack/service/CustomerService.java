@@ -29,9 +29,14 @@ public class CustomerService {
         return "Success";
     }
 
-    public String login_customer_service(@RequestBody Customer customerData)throws IOException{
-        String customer_id = customerData.getId();
-        
-        return "Success";
+    public boolean login_customer_service(String id , String password)throws IOException{
+        Customer customer = customerRepository.findById(id);
+        if(customer !=null&& customer.getPassword().equals(password)){
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 }

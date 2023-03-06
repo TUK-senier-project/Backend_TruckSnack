@@ -39,7 +39,7 @@ public class Customer {
     @Column(name = "SEQ")
     private Long seq;
 
-    @Column(name = "ID",nullable = false ,length = 35)
+    @Column(name = "ID",nullable = false ,length = 35,unique = true)
     private String id;
 
     @Column(name = "NAME",nullable = false ,length = 10)

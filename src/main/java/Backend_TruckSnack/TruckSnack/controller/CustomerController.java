@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.function.CustomerFunction;
 import Backend_TruckSnack.TruckSnack.service.CustomerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ import java.io.IOException;
 @Controller
 public class CustomerController {
     private  final CustomerService customerService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -56,14 +59,23 @@ public class CustomerController {
     @ResponseBody
     @PostMapping("/customer/login")
     public ResponseEntity login_customer(@RequestBody Customer customerData)throws IOException{
-        CustomerFunction customerFunction = new CustomerFunction();
-
         int check_flag = 0; // 성공시 0 실패시 1
         log.info("id={}, password={}"
                 , customerData.getId() , customerData.getPassword()
         );
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        if(customerService.login_customer_service(customerData.getId() , customerData.getPassword())){
+            log.info("로그인 성공... response Json 생성중");
+            Customer responseData = new Customer();
+            responseData.setId(customerData.getId());
+
+            String json = objectMapper.writeValueAsString(responseData);
+            return ResponseEntity.ok(json);
+        }else{
+            log.info("로그인 실패...");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
     }
 
 }
