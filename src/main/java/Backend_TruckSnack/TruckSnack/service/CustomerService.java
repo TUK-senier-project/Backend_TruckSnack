@@ -29,6 +29,16 @@ public class CustomerService {
         return "Success";
     }
 
+    public boolean register_idCheck_customer_service(String id)throws IOException{
+        Customer customer = customerRepository.findById(id);
+        if(customer !=null && customer.getId().equals(id)){
+            return false; //아이디가 있는경우
+        }
+        else{
+            return true; //아이디가 없는 경우
+        }
+    }
+
     public boolean login_customer_service(String id , String password)throws IOException{
         Customer customer = customerRepository.findById(id);
         if(customer !=null&& customer.getPassword().equals(password)){

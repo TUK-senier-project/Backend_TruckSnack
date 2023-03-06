@@ -33,7 +33,7 @@ public class CustomerController {
         CustomerFunction customerFunction = new CustomerFunction();
 
         int check_flag = 0; // 성공시 0 실패시 1
-        log.info("id={}, password={} , name={} , phone_number={} , location={}"
+        log.info("Customer Register >>  id={}, password={} , name={} , phone_number={} , location={}"
                 , customerData.getId() , customerData.getPassword() , customerData.getName()
                 , customerData.getPhone_number() , customerData.getLocation()
         );
@@ -43,36 +43,54 @@ public class CustomerController {
                 ,customerData.getPhone_number() , customerData.getLocation()
         );
         if(check_flag == 0){
-            log.info("회원가입이 시작됩니다.");
+            log.info("Customer Register >> 회원가입이 시작됩니다.");
             if (customerService.register_customer_service(customerData).equals("Success")) {
-                log.info("회원가입이 성공하였습니다.");
+                log.info("Customer Register >> 회원가입이 성공하였습니다.");
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         }
         else{
-            log.info("회원가입을 위한 값 오류 확인");
+            log.info("Customer Register >> 회원가입을 위한 값 오류 확인");
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+    @ResponseBody
+    @PostMapping("/customer/register-check")
+    public ResponseEntity register_customer_idCheck(@RequestBody Customer customerData)throws IOException{
+        log.info("Customer Register-idCheck >> id={}",customerData.getId());
 
+        if(customerService.register_idCheck_customer_service(customerData.getId())){
+//            log.info("Customer Register-idCheck >> 아이디 중복 없음... response Json 생성중");
+//            Customer responseData = new Customer();
+//            responseData.setId(customerData.getId());
+//
+            String json = objectMapper.writeValueAsString(customerData.getId());
+            log.info("Customer Register-idCheck >> 아이디 중복 없음... response Json 완료");
+
+            return ResponseEntity.ok(json);
+        }
+        else {
+            log.info("Customer Register-idCheck >> 중복아이디 확인 ... ");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
     @ResponseBody
     @PostMapping("/customer/login")
     public ResponseEntity login_customer(@RequestBody Customer customerData)throws IOException{
-        int check_flag = 0; // 성공시 0 실패시 1
-        log.info("id={}, password={}"
+        log.info("Customer Login >> id={}, password={}"
                 , customerData.getId() , customerData.getPassword()
         );
 
         if(customerService.login_customer_service(customerData.getId() , customerData.getPassword())){
-            log.info("로그인 성공... response Json 생성중");
+            log.info("Customer Login >> 로그인 성공... response Json 생성중");
             Customer responseData = new Customer();
             responseData.setId(customerData.getId());
 
             String json = objectMapper.writeValueAsString(responseData);
             return ResponseEntity.ok(json);
         }else{
-            log.info("로그인 실패...");
+            log.info("Customer Login >> 로그인 실패...");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
