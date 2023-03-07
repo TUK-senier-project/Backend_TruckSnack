@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.hibernate.query.criteria.internal.ValueHandlerFactory.isNumeric;
+
 public class CustomerFunction {
     // customer_register_check Start
     public int customer_register_check(String id, String password , String name , String phone_number , String location){
@@ -45,12 +47,14 @@ public class CustomerFunction {
     // 공백확인 함수 Start
     public int null_check(String customer_data){
         if(customer_data == null || "".equals(customer_data)){
+            System.out.println("nullcheck");
             return 1;
         }
         return 0;
     }
     public int korean_check(String customer_data){
         if(customer_data.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+            System.out.println("korean check");
             return 1;
         }
         else{
@@ -77,6 +81,7 @@ public class CustomerFunction {
                     customer_id  = customer_id .replaceAll("\\p{Z}", "");
                     if (!customer_id.matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝|(|)|.|-]*")) {
                         check_flag = 1;
+                        System.out.println("customeridcheck");
                     }
                     else{
                         check_flag = 0;
@@ -110,6 +115,7 @@ public class CustomerFunction {
                 //8~20글자가 아닌경우
                 if(customer_password.length()>20 ||customer_password.length()<8){
                     check_flag = 1;
+                    System.out.println("customerPasswordcheck");
                 }
                 else {
                     check_flag =0 ;
@@ -138,7 +144,8 @@ public class CustomerFunction {
 
         if(check_flag == 0){
             //한글로만 이루어진 경우 허용
-            if(!customer_name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+            if(customer_name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+                System.out.println("name_check");
                 return 1; //한글이외에 다른 문자가 들어옴
             }
             //이름이 10글자 이내
@@ -164,14 +171,18 @@ public class CustomerFunction {
         int check_flag = 0; //0 성공 , 1 실패
         //공백 경우
         check_flag = null_check(customer_phone_number);
+        int test_phone_number = Integer.parseInt(customer_phone_number);
+        boolean isNumeric = isNumeric(test_phone_number); // 넘버릭을 통해 숫자만 들어와있는지  숫자만 true 아니면 false
 
         if(check_flag == 0){
             //숫자만 허용
-            if(!customer_phone_number.matches(".*[0-9]+.*")){
+            if(isNumeric == false){
+                System.out.println("폰넘버 숫자 체크");
                 return 1; //숫자이외에 다른 값이 들어옴
             }
             //11 자리가 아닌 경우
-            else if (customer_phone_number.length() !=10){
+            else if (customer_phone_number.length() !=11){
+                System.out.println("폰넘버 길이 체크");
                 return 1; //11글자가 이닌 숫자가 들어옴
             }
             else{
@@ -199,11 +210,13 @@ public class CustomerFunction {
             //특수문자 비허용
             customer_location  = customer_location.replaceAll("\\p{Z}", "");
             if (!customer_location.matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝|(|)|.|-]*")) {
+                System.out.println("로케이션 체크");
                 //특수문자가 들어았는 경우
                 check_flag = 1;
             }
             //정보가 50글자가 넘는경우
             else if (customer_location.length()>50){
+                System.out.println("로케이션 체크");
                 return 1; //50글자 이상의 내용
             }
             else{

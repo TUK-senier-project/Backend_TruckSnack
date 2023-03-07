@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.service;
 
 import Backend_TruckSnack.TruckSnack.domain.Customer;
+import Backend_TruckSnack.TruckSnack.repository.CustomerFunctionRepository;
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,19 @@ public class CustomerService {
         }
         else {
             return false;
+        }
+
+    }
+
+    public String id_find_customer_service(String name , String phone_number)throws IOException{
+        String customer_id_find_result;
+        customer_id_find_result = String.valueOf(CustomerFunctionRepository.findById(name , phone_number));
+
+        if(customer_id_find_result != null){
+            return customer_id_find_result;
+        }
+        else{
+            return "NotFound";
         }
 
     }

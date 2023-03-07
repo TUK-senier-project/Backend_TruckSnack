@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -94,6 +95,16 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+    }
+
+    @PostMapping("/customer/idfind")
+    @ResponseBody
+    public ResponseEntity find_id_customer(@RequestBody Customer customerData) throws IOException {
+        log.info("Customer Register-find_id >> name={} , phone_number={}",customerData.getName() , customerData.getPhone_number());
+        String find_id_result = customerService.id_find_customer_service(customerData.getName() , customerData.getPhone_number());
+        log.info(find_id_result);
+        String json = objectMapper.writeValueAsString(find_id_result);
+        return ResponseEntity.ok(json);
     }
 
 }
