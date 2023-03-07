@@ -25,21 +25,25 @@ import java.time.LocalDateTime;
 public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SEQ",nullable = false)
-    private String seq;
-    @Column(name = "BUSINESS_NAME",nullable = false)
+    @Column(name = "SEQ")
+    private Long seq;
+    @Column(name = "ID",nullable = false ,length = 35)
+    private String id;
+    @Column(name = "PASSWORD",nullable = false ,length = 20)
+    private String password;
+    @Column(name = "BUSINESS_NAME",nullable = false,length = 15)
     private String business_name;
-    @Column(name = "CONTENT",nullable = false)
+    @Column(name = "CONTENT",nullable = false,length = 50)
     private String content;
     @Column(name = "CATEGORY",nullable = false)
     private  int category;
-    @Column(name = "DEADLINE",nullable = false)
+    @Column(name = "DEADLINE",nullable = false,length = 50)
     private int deadline;
-    @Column(name = "PHONE_NUMBER",nullable = true)
+    @Column(name = "PHONE_NUMBER",nullable = true,length = 11)
     private String phone_number;
-    @Column(name = "SELLER_IMG_S3_URL",nullable = true)
+    @Column(name = "SELLER_IMG_S3_URL",nullable = true,length = 100)
     private String seller_img_s3_url;
-    @Column(name = "LOCATION",nullable = true)
+    @Column(name = "LOCATION",nullable = true,length = 50)
     private String location;
     @CreationTimestamp
     @Column(name = "IS_CREATED",nullable = false)
