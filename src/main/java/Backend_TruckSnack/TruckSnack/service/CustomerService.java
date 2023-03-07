@@ -1,11 +1,9 @@
 package Backend_TruckSnack.TruckSnack.service;
 
 import Backend_TruckSnack.TruckSnack.domain.Customer;
-import Backend_TruckSnack.TruckSnack.repository.CustomerFunctionRepository;
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,7 +21,7 @@ public class CustomerService {
                         .id(customerData.getId())
                         .password(customerData.getPassword())
                         .name(customerData.getName())
-                        .phone_number(customerData.getPhone_number())
+                        .phoneNumber(customerData.getPhoneNumber())
                         .location(customerData.getLocation())
                         .build()
         );
@@ -51,9 +49,11 @@ public class CustomerService {
 
     }
 
-    public String id_find_customer_service(String name , String phone_number)throws IOException{
+    public String id_find_customer_service(String name , String phoneNumber)throws IOException{
         String customer_id_find_result;
-        customer_id_find_result = String.valueOf(CustomerFunctionRepository.findById(name , phone_number));
+        System.out.println(name);
+        System.out.println("++++"+phoneNumber);
+        customer_id_find_result = String.valueOf(customerRepository.findByNameAndPhoneNumber(name, phoneNumber));
 
         if(customer_id_find_result != null){
             return customer_id_find_result;

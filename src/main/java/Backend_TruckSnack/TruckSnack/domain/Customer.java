@@ -47,19 +47,19 @@ public class Customer {
     @Column(name = "PASSWORD",nullable = false ,length = 20)
     private String password;
     @Column(name = "CUSTOMER_IMG_S3_URL",nullable = true ,length = 100)
-    private String customer_img_s3_url;
+    private String customerImgS3Url;
     @Column(name = "PHONE_NUMBER",nullable = true ,length = 11)
-    private String phone_number;
+    private String phoneNumber;
     @Column(name = "LOCATION",nullable = true ,length = 50)
     private String location;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
-    private LocalDateTime is_created;
+    private LocalDateTime isCreated;
     @Column(name = "IS_UPDATED",nullable = false)
     @UpdateTimestamp
-    private LocalDateTime is_updated;
+    private LocalDateTime isUpdated;
     @Column(name = "IS_DELETED",nullable = false)
-    private boolean is_deleted;
+    private boolean isDeleted;
 
 
 }
