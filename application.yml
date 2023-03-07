@@ -1,0 +1,16 @@
+cloud:
+  aws:
+    s3:
+      bucket: truck-snack-img-bucket
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: AKIA5X53T3IFI7QMZ65K
+      secretKey: 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
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
