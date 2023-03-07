@@ -1,7 +1,7 @@
 package Backend_TruckSnack.TruckSnack.controller;
 
-import Backend_TruckSnack.TruckSnack.domain.S3Img;
-import Backend_TruckSnack.TruckSnack.service.S3_img_Service;
+import Backend_TruckSnack.TruckSnack.domain.FileDetail;
+import Backend_TruckSnack.TruckSnack.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,12 +15,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/upload", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class S3_img_Controller {
-    private final S3_img_Service s3ImgServices;
+public class UploadController {
+    private final FileUploadService fileUploadService;
 
     @PostMapping
-    public ResponseEntity<S3Img> post(
-            @RequestPart(value ="file", required=false) MultipartFile s3Img) {
-        return ResponseEntity.ok(s3ImgServices.save(s3Img));
+    public ResponseEntity<FileDetail> post(
+            @RequestPart("file") MultipartFile multipartFile) {
+        return ResponseEntity.ok(fileUploadService.save(multipartFile));
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
-public class S3_img_util {
+public final class MultipartUtil {
     private static final String BASE_DIR = "images";
 
     /**
@@ -42,5 +42,4 @@ public class S3_img_util {
     public static String createPath(String fileId, String format) {
         return String.format("%s/%s.%s", BASE_DIR, fileId, format);
     }
-
 }

@@ -1,6 +1,6 @@
 package Backend_TruckSnack.TruckSnack.stroragy;
 
-import Backend_TruckSnack.TruckSnack.util.S3_img_util;
+import Backend_TruckSnack.TruckSnack.util.MultipartUtil;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -19,7 +19,7 @@ public class AmazonS3ResourceStorage {
     private final AmazonS3Client amazonS3Client;
 
     public void store(String fullPath, MultipartFile multipartFile) {
-        File file = new File(S3_img_util.getLocalHomeDirectory(), fullPath);
+        File file = new File(MultipartUtil.getLocalHomeDirectory(), fullPath);
         try {
             multipartFile.transferTo(file);
             amazonS3Client.putObject(new PutObjectRequest(bucket, fullPath, file)
