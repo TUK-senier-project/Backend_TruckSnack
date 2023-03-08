@@ -101,7 +101,7 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity find_id_customer(@RequestBody Customer customerData) throws IOException {
         log.info("Customer Register-find_id >> name={} , phoneNumber={}",customerData.getName() , customerData.getPhoneNumber());
-        String find_id_result = customerService.id_find_customer_service(customerData.getName() , customerData.getPhoneNumber());
+        String find_id_result = String.valueOf(customerService.id_find_customer_service(customerData.getName() , customerData.getPhoneNumber()));
         log.info(find_id_result);
         String json = objectMapper.writeValueAsString(find_id_result);
         return ResponseEntity.ok(json);

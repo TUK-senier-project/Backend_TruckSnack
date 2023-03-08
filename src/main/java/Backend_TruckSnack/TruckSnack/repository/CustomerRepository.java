@@ -10,5 +10,9 @@ import javax.persistence.Entity;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findById(String id);
+
+    @Query("SELECT c from  Customer c where c.name = ?1 AND c.phoneNumber =?2")
     Customer findByNameAndPhoneNumber(String name,String phoneNumber);
+
+
 }

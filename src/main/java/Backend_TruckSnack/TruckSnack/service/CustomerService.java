@@ -50,17 +50,6 @@ public class CustomerService {
     }
 
     public String id_find_customer_service(String name , String phoneNumber)throws IOException{
-        String customer_id_find_result;
-        System.out.println(name);
-        System.out.println("++++"+phoneNumber);
-        customer_id_find_result = String.valueOf(customerRepository.findByNameAndPhoneNumber(name, phoneNumber));
-
-        if(customer_id_find_result != null){
-            return customer_id_find_result;
-        }
-        else{
-            return "NotFound";
-        }
-
+        return customerRepository.findByNameAndPhoneNumber(name,phoneNumber).getId();
     }
 }
