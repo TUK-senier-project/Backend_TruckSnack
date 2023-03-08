@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Seller;
+import Backend_TruckSnack.TruckSnack.function.SellerFunction;
 import Backend_TruckSnack.TruckSnack.service.SellerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -22,7 +25,27 @@ public class SellerController {
 
     @ResponseBody
     @PostMapping("/seller/register")
-    public ResponseEntity register_seller(@RequestBody Seller sellerData)throws IndexOutOfBoundsException{
+    public ResponseEntity register_seller(@RequestBody Seller sellerData) throws IndexOutOfBoundsException, IOException {
+        SellerFunction sellerFunction = new SellerFunction();
+        int check_flag = 0;
+
+        log.info("Seller Register >> id = {} , businessName = {} , password={} , content = {} , category= {} , deadline={}," +
+                "phoneNumber ={} , location= {}", sellerData.getId() , sellerData.getBusinessName(),sellerData.getPassword(),
+                sellerData.getContent(), sellerData.getCategory() , sellerData.getDeadline() , sellerData.getPhoneNumber() , sellerData.getLocation());
+
+        check_flag = sellerFunction.seller_register_check(sellerData.getId() , sellerData.getPassword(),sellerData.getBusinessName(),
+                sellerData.getContent(),sellerData.getCategory(),sellerData.getPhoneNumber(),sellerData.getLocation() );
+
+        if(check_flag ==0){
+            log.info("Seller Register >> 회원가입이 시작됩니다.");
+            if(sellerService.register_seller_service(sellerData).equals("Success")){
+                log.info("Seller Register >> 회원가입이 성공하였습니다.");
+                return new ResponseEntity(HttpStatus.CREATED);
+            }
+        }else{
+            log.info("Seller Register >> 회원가입 값 확인중 에러 확인");
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
 
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
