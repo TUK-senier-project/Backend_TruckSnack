@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 @Entity
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,30 +28,30 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ")
     private Long seq;
-    @Column(name = "ID",nullable = false ,length = 35)
+    @Column(name = "ID",nullable = false ,length = 35,unique = true)
     private String id;
     @Column(name = "PASSWORD",nullable = false ,length = 20)
     private String password;
     @Column(name = "BUSINESS_NAME",nullable = false,length = 15)
-    private String business_name;
+    private String businessName;
     @Column(name = "CONTENT",nullable = false,length = 50)
     private String content;
     @Column(name = "CATEGORY",nullable = false)
     private  int category;
     @Column(name = "DEADLINE",nullable = false,length = 50)
     private int deadline;
-    @Column(name = "PHONE_NUMBER",nullable = true,length = 11)
-    private String phone_number;
+    @Column(name = "PHONE_NUMBER",nullable = true ,length = 11)
+    private String phoneNumber;
     @Column(name = "SELLER_IMG_S3_URL",nullable = true,length = 100)
-    private String seller_img_s3_url;
+    private String sellerImgS3Url;
     @Column(name = "LOCATION",nullable = true,length = 50)
     private String location;
-    @CreationTimestamp
     @Column(name = "IS_CREATED",nullable = false)
-    private LocalDateTime is_created;
-    @UpdateTimestamp
+    @CreationTimestamp
+    private LocalDateTime isCreated;
     @Column(name = "IS_UPDATED",nullable = false)
-    private LocalDateTime is_updated;
+    @UpdateTimestamp
+    private LocalDateTime isUpdated;
     @Column(name = "IS_DELETED",nullable = false)
-    private boolean is_deleted;
+    private boolean isDeleted;
 }

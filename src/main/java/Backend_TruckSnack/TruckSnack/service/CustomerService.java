@@ -4,7 +4,6 @@ import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,7 +21,7 @@ public class CustomerService {
                         .id(customerData.getId())
                         .password(customerData.getPassword())
                         .name(customerData.getName())
-                        .phone_number(customerData.getPhone_number())
+                        .phoneNumber(customerData.getPhoneNumber())
                         .location(customerData.getLocation())
                         .build()
         );
@@ -48,5 +47,9 @@ public class CustomerService {
             return false;
         }
 
+    }
+
+    public String id_find_customer_service(String name , String phoneNumber)throws IOException{
+        return customerRepository.findByNameAndPhoneNumber(name,phoneNumber).getId();
     }
 }

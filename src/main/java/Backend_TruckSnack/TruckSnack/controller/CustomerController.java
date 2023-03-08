@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -35,12 +36,12 @@ public class CustomerController {
         int check_flag = 0; // 성공시 0 실패시 1
         log.info("Customer Register >>  id={}, password={} , name={} , phone_number={} , location={}"
                 , customerData.getId() , customerData.getPassword() , customerData.getName()
-                , customerData.getPhone_number() , customerData.getLocation()
+                , customerData.getPhoneNumber() , customerData.getLocation()
         );
 
         check_flag =customerFunction.customer_register_check(
                 customerData.getId(),customerData.getPassword(),customerData.getName()
-                ,customerData.getPhone_number() , customerData.getLocation()
+                ,customerData.getPhoneNumber() , customerData.getLocation()
         );
         if(check_flag == 0){
             log.info("Customer Register >> 회원가입이 시작됩니다.");
@@ -95,5 +96,16 @@ public class CustomerController {
         }
 
     }
+
+    @PostMapping("/customer/idfind")
+    @ResponseBody
+    public ResponseEntity find_id_customer(@RequestBody Customer customerData) throws IOException {
+        log.info("Customer Register-find_id >> name={} , phoneNumber={}",customerData.getName() , customerData.getPhoneNumber());
+        String find_id_result = String.valueOf(customerService.id_find_customer_service(customerData.getName() , customerData.getPhoneNumber()));
+        log.info(find_id_result);
+        String json = objectMapper.writeValueAsString(find_id_result);
+        return ResponseEntity.ok(json);
+    }
+
 
 }
