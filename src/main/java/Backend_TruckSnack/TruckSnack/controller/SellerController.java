@@ -51,4 +51,19 @@ public class SellerController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseBody
+    @PostMapping("/seller/register-check")
+    public ResponseEntity register_seller_idcheck(@RequestBody Seller sellerData)throws IOException{
+        log.info("Seller Register id-check >> id={}",sellerData.getId());
+        if(sellerService.register_seller_id_check(sellerData.getId())){
+            String json = objectMapper.writeValueAsString(sellerData.getId());
+            log.info("Seller Register id-check >> id 증복 없음..response");
+            return ResponseEntity.ok(json);
+        }
+        else {
+            log.info("Seller Register id-check >> id 증복 있음..response");
+            return ResponseEntity.ok("this_id_already");
+        }
+    }
+
 }

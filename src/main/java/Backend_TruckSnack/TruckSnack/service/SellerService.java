@@ -30,4 +30,15 @@ public class SellerService {
         );
         return "Success";
     }
+
+    public boolean register_seller_id_check(String id){
+        Seller seller = sellerRepository.findById(id);
+        if(seller != null && seller.getId().equals(id)){
+            return false;
+        }
+        else{
+            return true; //아이디 없음
+        }
+    }
+
 }
