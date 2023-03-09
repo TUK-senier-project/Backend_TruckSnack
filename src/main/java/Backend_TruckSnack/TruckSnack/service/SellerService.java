@@ -41,4 +41,14 @@ public class SellerService {
         }
     }
 
+    public boolean login_seller_service(String id , String password)throws IOException{
+        Seller seller = sellerRepository.findById(id);
+        if(seller !=null && seller.getPassword().equals(password)){
+            return true ; //로그인 성공
+        }
+        else {
+            return false;
+        }
+    }
+
 }

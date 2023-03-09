@@ -66,4 +66,20 @@ public class SellerController {
         }
     }
 
+    @ResponseBody
+    @PostMapping("/seller/login")
+    public ResponseEntity login_seller(@RequestBody Seller sellerData)throws IOException{
+        log.info("Seller login >> id={} , password={}",sellerData.getId() , sellerData.getPassword());
+        if(sellerService.login_seller_service(sellerData.getId(),sellerData.getPassword())){
+            log.info("Seller Login >> 로그인 성공 ... response json 생성중");
+            Seller responseData = new Seller();
+            responseData.setId(sellerData.getId());
+
+            String json = objectMapper.writeValueAsString(responseData);
+            return ResponseEntity.ok(json);
+        }else {
+            log.info("Seller Login >> 로그인 실패 ... response json 생성중");
+            return ResponseEntity.ok("login fail");
+        }
+    }
 }
