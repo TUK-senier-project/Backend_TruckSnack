@@ -50,5 +50,9 @@ public class SellerService {
             return false;
         }
     }
+    
+    public String id_find_seller_service(String bussinessName , String phoneNumber){
+        return sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber).getId();
+    }
 
 }
