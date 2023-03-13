@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 )
 @Data
 public class Seller {
+    public int setSeq;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ")
