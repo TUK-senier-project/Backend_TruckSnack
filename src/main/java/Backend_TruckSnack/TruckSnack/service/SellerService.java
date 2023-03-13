@@ -55,4 +55,7 @@ public class SellerService {
         return sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber).getId();
     }
 
+    public int seq_find_seller_service(String id){
+        return Math.toIntExact(sellerRepository.findById(id).getSeq());
+    }
 }
