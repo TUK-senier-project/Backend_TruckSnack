@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @Controller
-public class foodListController {
+public class FoodListController {
     private final FoodListService foodListService;
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
-    public foodListController(FoodListService foodListService) {
+    public FoodListController(FoodListService foodListService) {
         this.foodListService = foodListService;
     }
 
@@ -24,6 +24,13 @@ public class foodListController {
         log.info("food-list >> category Number: {}",categoryNumber);
         String json = objectMapper.writeValueAsString(foodListService.get_foodList_service(categoryNumber));
         log.info(json);
+        return ResponseEntity.ok(json);
+    }
+
+    @GetMapping("/food-list/detail/{sellerId}")
+    public ResponseEntity  foodList_detail(@PathVariable String sellerId) throws JsonProcessingException {
+        log.info("food-list.Detail >> sellerId={}" , sellerId);
+        String json = objectMapper.writeValueAsString(foodListService.get_foodDetail_service(sellerId));
         return ResponseEntity.ok(json);
     }
 

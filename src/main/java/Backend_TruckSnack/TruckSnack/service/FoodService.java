@@ -20,7 +20,7 @@ public class FoodService {
                 Food.builder()
                         .foodName(foodData.getFoodName())
                         .price(foodData.getPrice())
-                        .sellerSeq(sellerSeq)
+                        .sellerSeq((long) sellerSeq)
                         .build()
         );
         return "Success";

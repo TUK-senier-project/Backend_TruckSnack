@@ -24,7 +24,7 @@ public class Food {
     @Column(name = "SEQ")
     private Long seq;
     @JoinColumn(name="SELLER_SEQ")
-    private int sellerSeq;
+    private Long sellerSeq;
     @Column(name = "FOOD_NAME",nullable = false,length = 20)
     private String foodName;
     @Column(name = "PRICE",nullable = false)

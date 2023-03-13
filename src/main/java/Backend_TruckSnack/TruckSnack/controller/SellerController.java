@@ -86,7 +86,7 @@ public class SellerController {
     @ResponseBody
     @PostMapping("/seller/idfind")
     public ResponseEntity find_id_seller(@RequestBody Seller sellerData)throws IOException{
-        log.info("seller Register-find_id >> name={} , phoneNumber={}",sellerData.getBusinessName() , sellerData.getPhoneNumber());
+        log.info("seller Register-find_id >>businessName={} , phoneNumber={}",sellerData.getBusinessName() , sellerData.getPhoneNumber());
         String find_id_result = String.valueOf(sellerService. id_find_seller_service(sellerData.getBusinessName() , sellerData.getPhoneNumber()));
         log.info(find_id_result);
         String json = objectMapper.writeValueAsString(find_id_result);
