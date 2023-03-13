@@ -23,9 +23,8 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ")
     private Long seq;
-    @ManyToOne
     @JoinColumn(name="SELLER_SEQ")
-    private Seller seller;
+    private int sellerSeq;
     @Column(name = "FOOD_NAME",nullable = false,length = 20)
     private String foodName;
     @Column(name = "PRICE",nullable = false)

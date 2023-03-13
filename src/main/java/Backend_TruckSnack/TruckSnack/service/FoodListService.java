@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.service;
 
 import Backend_TruckSnack.TruckSnack.repository.FoodListRepository;
+import Backend_TruckSnack.TruckSnack.repository.mapping.FoodDetailMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.FoodListMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,5 +24,6 @@ public class FoodListService {
 
             return seller_list;
     }
+
 
 }
