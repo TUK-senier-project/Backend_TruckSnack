@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class FoodListController {
     private final FoodListService foodListService;
-    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     public FoodListController(FoodListService foodListService) {
         this.foodListService = foodListService;
     }
