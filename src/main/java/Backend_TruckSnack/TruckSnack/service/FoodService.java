@@ -25,8 +25,5 @@ public class FoodService {
         );
         return "Success";
     }
-    //    public List<FoodDetailMapping>food_detail_service(int seller_seq){
-//        List<FoodDetailMapping> food_list = null;
-//        return null;
-//    }
+
 }
