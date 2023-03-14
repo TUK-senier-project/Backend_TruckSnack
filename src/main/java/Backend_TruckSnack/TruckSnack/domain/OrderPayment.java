@@ -25,8 +25,8 @@ public class OrderPayment {
     private Long seq;
     @JoinColumn(name="FOOD_SEQ")
     private Long foodSeq;
-//    @JoinColumn(name="CUSTOMER_ORDER_PAYMENT")
-//    private Long customerOrderPayment;
+    @JoinColumn(name="CUSTOMER_ORDER_PAYMENT_SEQ")
+    private Long customerOrderPaymentSeq;
     @Column(name = "Quantity",nullable = false)
     int quantity;
     @Column(name = "TOTAL_PRICE",nullable = false)
