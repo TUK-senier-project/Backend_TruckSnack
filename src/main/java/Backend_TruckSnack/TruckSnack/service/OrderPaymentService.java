@@ -1,5 +1,6 @@
 package Backend_TruckSnack.TruckSnack.service;
 
+import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
@@ -7,6 +8,7 @@ import Backend_TruckSnack.TruckSnack.repository.FoodRepository;
 import Backend_TruckSnack.TruckSnack.repository.OrderPaymentRepository;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import Backend_TruckSnack.TruckSnack.repository.dto.OrderPaymentDTO;
+import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,21 @@ public class OrderPaymentService {
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final FoodRepository foodRepository;
     private final SellerRepository sellerRepository;
+
+    public List<OrderListMapping>order_list_service(String seller_id){
+        List<OrderListMapping> order_list;
+        System.out.println(seller_id);
+        order_list = customerOrderPaymentRepository.findBySellerId(seller_id);
+
+        if(order_list.isEmpty()){
+            log.info("오더 리스트가없다.");
+            return null;
+        }
+        else{
+            log.info("오더 리스트 존재");
+            return order_list;
+        }
+    }
 
     public CustomerOrderPayment create_orderPayment(List<OrderPayment> foods , String customer_id){
         OrderPaymentDTO orderPaymentDTO = new OrderPaymentDTO();
@@ -65,7 +82,7 @@ public class OrderPaymentService {
             log.info("저장완료 , 다음루프로 ...");
             log.info("현재까지의 총합계 : {}" , customer_total_price);
         }
-        
+
         log.info("주문 정보 집계 완료 ... 총합계 : {}" , customer_total_price);
         log.info("find seller_Seq  = {}" , find_seller_seq);
         log.info("고객 총주문수에 총 합계 저장중..");
@@ -73,6 +90,8 @@ public class OrderPaymentService {
         //총 주문 저장용 아이디 찾기
         save_seller_id = find_by_sellerId(find_seller_seq);
         customerOrderPayment.setSellerId(save_seller_id);
+        //db에 저장
+        customerOrderPaymentRepository.save(customerOrderPayment);
         log.info("주문서 작성완료...");
         return customerOrderPayment;
     }
@@ -88,5 +107,7 @@ public class OrderPaymentService {
     public String find_by_sellerId(Long seller_seq){
         return sellerRepository.findBySeq(seller_seq).getId();
     }
+
+
 
 }

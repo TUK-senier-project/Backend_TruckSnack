@@ -2,6 +2,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
+import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import Backend_TruckSnack.TruckSnack.service.OrderPaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,9 +48,19 @@ public class OrderPaymentController {
     }
 
     @PostMapping("/orderPayment/order-list")
-    public ResponseEntity order_list(@RequestBody String seller_id){
-        log.info("seller_id 별 리스트 조회 ... >> {}",seller_id );
-        return null;
+    public ResponseEntity order_list(@RequestBody CustomerOrderPayment COPData) throws JsonProcessingException {
+        //COP : CustomerOrderPayment
+        List<OrderListMapping> orderList;
+        log.info("seller_id 별 리스트 조회 ... >> {}",COPData.getSellerId() );
+        orderList = orderPaymentService.order_list_service(COPData.getSellerId());
+        if(orderList.isEmpty()){
+            return (ResponseEntity) ResponseEntity.noContent();
+        }
+        else{
+            String json = objectMapper.writeValueAsString(orderList);
+            return ResponseEntity.ok(json);
+        }
+
     }
 
 }
