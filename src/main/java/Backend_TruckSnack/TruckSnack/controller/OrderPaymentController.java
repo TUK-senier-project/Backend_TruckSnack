@@ -45,4 +45,11 @@ public class OrderPaymentController {
         json = objectMapper.writeValueAsString(orderPaymentService.create_orderPayment(foods , customer_id));
         return ResponseEntity.ok(json);
     }
+
+    @PostMapping("/orderPayment/order-list")
+    public ResponseEntity order_list(@RequestBody String seller_id){
+        log.info("seller_id 별 리스트 조회 ... >> {}",seller_id );
+        return null;
+    }
+
 }
