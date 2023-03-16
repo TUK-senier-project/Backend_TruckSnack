@@ -2,6 +2,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
+import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import Backend_TruckSnack.TruckSnack.service.OrderPaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,6 +62,12 @@ public class OrderPaymentController {
             return ResponseEntity.ok(json);
         }
 
+    }
+
+    @PostMapping("/orderPayment/detail-order-list/")
+    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData ){
+        log.info("OrderList Detail >> Seq ={}" , customerOrderPaymentData.getSeq());
+        return null;
     }
 
 }
