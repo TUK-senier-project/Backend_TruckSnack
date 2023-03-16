@@ -2,6 +2,8 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
+import Backend_TruckSnack.TruckSnack.domain.Seller;
+import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import Backend_TruckSnack.TruckSnack.service.OrderPaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,4 +47,27 @@ public class OrderPaymentController {
         json = objectMapper.writeValueAsString(orderPaymentService.create_orderPayment(foods , customer_id));
         return ResponseEntity.ok(json);
     }
+
+    @PostMapping("/orderPayment/order-list")
+    public ResponseEntity order_list(@RequestBody CustomerOrderPayment COPData) throws JsonProcessingException {
+        //COP : CustomerOrderPayment
+        List<OrderListMapping> orderList;
+        log.info("seller_id 별 리스트 조회 ... >> {}",COPData.getSellerId() );
+        orderList = orderPaymentService.order_list_service(COPData.getSellerId());
+        if(orderList.isEmpty()){
+            return (ResponseEntity) ResponseEntity.noContent();
+        }
+        else{
+            String json = objectMapper.writeValueAsString(orderList);
+            return ResponseEntity.ok(json);
+        }
+
+    }
+
+    @PostMapping("/orderPayment/detail-order-list/")
+    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData ){
+        log.info("OrderList Detail >> Seq ={}" , customerOrderPaymentData.getSeq());
+        return null;
+    }
+
 }

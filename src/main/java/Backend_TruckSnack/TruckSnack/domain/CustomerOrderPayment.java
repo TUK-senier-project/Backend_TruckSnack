@@ -1,8 +1,11 @@
 package Backend_TruckSnack.TruckSnack.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -23,6 +26,17 @@ public class CustomerOrderPayment {
 
     @JoinColumn(name="Customer_ID")
     private String customerId;
+    @JoinColumn(name = "Seller_ID")
+    private String sellerId;
     @Column(name = "ORDER_TOTAL_PRICE",nullable = true)
-    int orderTotalPrice;
+    private int orderTotalPrice;
+
+    @Column(name = "IS_CREATED",nullable = false)
+    @CreationTimestamp
+    private LocalDateTime isCreated;
+    @Column(name = "IS_UPDATED",nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime isUpdated;
+    @Column(name = "IS_DELETED",nullable = false)
+    private boolean isDeleted;
 }
