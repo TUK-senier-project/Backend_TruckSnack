@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.domain;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
         schema = "SnackTest"
 )
 @Data
+@Component
 public class CustomerOrderPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +32,8 @@ public class CustomerOrderPayment {
     private String sellerId;
     @Column(name = "ORDER_TOTAL_PRICE",nullable = true)
     private int orderTotalPrice;
-
+    @Column(name = "ORDER_STATE",nullable = false)
+    private int orderState;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
     private LocalDateTime isCreated;

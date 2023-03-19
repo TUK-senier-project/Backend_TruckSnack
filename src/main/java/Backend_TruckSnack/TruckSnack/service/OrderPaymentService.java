@@ -1,6 +1,5 @@
 package Backend_TruckSnack.TruckSnack.service;
 
-import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
@@ -12,18 +11,121 @@ import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListDetailMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderPaymentService {
+    @Autowired
+    private  EntityManager entityManager;
     private final OrderPaymentRepository orderPaymentRepository;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final FoodRepository foodRepository;
     private final SellerRepository sellerRepository;
+
+    /**
+     * Order_State : 주문에대한 상태
+     *0 : 생성중…
+     * 생성중일때의 상태
+     * 1 : 주문확인 대기중
+     * 주문확인이 요청되기전 리스트에만 나와있는상태
+     * 2: 주문취소
+     * 주문을 취소한 경우
+     * 3: 주문확인
+     * 주문확인에 대한 요청이 확인되면
+     * 4: 완료
+     * 손님이 음식을 받아 완료 된 경우
+     */
+    private final int order_state_create = 0;
+    private final int order_state_waiting = 1;
+    private final int order_state_cancel = 2;
+    private final int order_state_check = 3;
+    private final int order_state_complete = 4;
+
+    private  final CustomerOrderPayment customerOrderPayment;
+
+    public String order_check(Long order_seq){
+        /**
+         * 해야할것
+         * 주문번호가 유효한지 - waiting state 인지 (커스토머 오더에서)
+         * 셋팅해서 번호를 3번으로 state-check 상태로 변환
+         * 반환
+         */
+        int get_order_state = 10;
+        String return_text;
+        get_order_state = find_by_orderState(order_seq);
+
+        switch (get_order_state){
+            case 0:
+                return_text = "maybe create Error : please tell me";
+                break;
+            case 1 :
+                log.info("orderSeq : {} -- is check",order_seq );
+                merge_entity_content(order_state_check, order_seq);
+                return_text ="orderSeq : "+order_seq+" .. check";
+                break;
+            case 2:
+                return_text = "this order cancel";
+                break;
+            case 3:
+                return_text = "this order already check";
+                break;
+            case 4:
+                return_text = "this order complete";
+                break;
+            default:
+                return_text = "server ERROR";
+                break;
+
+        }
+
+        return return_text;
+
+    }
+
+    public String order_cancel(Long order_seq){
+
+        int get_order_state = 10;
+        log.info(String.valueOf(order_seq));
+        String return_text = "SERVER ERROR - PLEASE CONNECT - me";
+        get_order_state = find_by_orderState(order_seq);
+        log.info(String.valueOf(get_order_state));
+
+        switch (get_order_state){
+            case 0:
+                return_text = "maybe create Error : please tell me";
+                break;
+            case 1:
+                log.info("orderSeq : {} -- is check",order_seq );
+                merge_entity_content(order_state_cancel , order_seq);
+                return_text = "Your order has been cancelled.";
+                break;
+            case 2:
+                return_text = "Your order already cancelled.";
+                break;
+            case 3:
+                String seller_phoneNumber; String seller_id;
+                seller_id = customerOrderPaymentRepository.findBySeq(order_seq).getSellerId();
+                log.info("order Cancel  : seller-id : {}" , seller_id);
+                seller_phoneNumber = sellerRepository.findById(seller_id).getPhoneNumber();
+                return_text = "Your order has already been placed - please contact us directly at this number : "+seller_phoneNumber;
+                break;
+            case 4:
+                return_text = "Your order already complete";
+                break;
+            default:
+                return_text = "server ERROR";
+                break;
+        }
+        return return_text;
+    }
 
     public List<OrderListDetailMapping>order_list_detail_service(Long customer_orderPayment_seq){
         List<OrderListDetailMapping> detail_list;
@@ -65,6 +167,7 @@ public class OrderPaymentService {
         customerOrderPayment = customerOrderPaymentRepository.save(
                 CustomerOrderPayment.builder()
                         .customerId(customer_id)
+                        .orderState(order_state_create)
                         .build()
         );
         Long customerOrderPaymentSeq = customerOrderPayment.getSeq();
@@ -103,6 +206,7 @@ public class OrderPaymentService {
         //총 주문 저장용 아이디 찾기
         save_seller_id = find_by_sellerId(find_seller_seq);
         customerOrderPayment.setSellerId(save_seller_id);
+        customerOrderPayment.setOrderState(order_state_waiting);
         //db에 저장
         customerOrderPaymentRepository.save(customerOrderPayment);
         log.info("주문서 작성완료...");
@@ -122,5 +226,19 @@ public class OrderPaymentService {
     }
 
 
+    public int find_by_orderState(Long order_seq){
+        CustomerOrderPayment customerOrderPayment;
+        //log.info(String.valueOf(order_seq));
+        customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
+        return customerOrderPayment.getOrderState();
+    }
+    
+    public void merge_entity_content(int state , Long order_seq){
+            CustomerOrderPayment customerOrderPayment;
+            customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
+            customerOrderPayment.setOrderState(state);
+            entityManager.merge(customerOrderPayment);
+
+    }
 
 }
