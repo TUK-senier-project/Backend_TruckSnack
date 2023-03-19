@@ -11,15 +11,20 @@ import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListDetailMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderPaymentService {
-
+    @Autowired
+    private  EntityManager entityManager;
     private final OrderPaymentRepository orderPaymentRepository;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final FoodRepository foodRepository;
@@ -45,6 +50,7 @@ public class OrderPaymentService {
     private final int order_state_complete = 4;
 
     private  final CustomerOrderPayment customerOrderPayment;
+
     public String order_check(Long order_seq){
         /**
          * 해야할것
@@ -62,9 +68,7 @@ public class OrderPaymentService {
                 break;
             case 1 :
                 log.info("orderSeq : {} -- is check",order_seq );
-                //CustomerOrderPayment customerOrderPayment = null;
-                customerOrderPayment.setOrderState(order_state_check);  //state number : 3;
-                customerOrderPaymentRepository.save(customerOrderPayment);
+                merge_entity_content(order_state_check, order_seq);
                 return_text ="orderSeq : "+order_seq+" .. check";
                 break;
             case 2:
@@ -100,8 +104,7 @@ public class OrderPaymentService {
                 break;
             case 1:
                 log.info("orderSeq : {} -- is check",order_seq );
-                customerOrderPayment.setOrderState(order_state_cancel);  //state number : 2;
-                customerOrderPaymentRepository.save(customerOrderPayment);
+                merge_entity_content(order_state_cancel , order_seq);
                 return_text = "Your order has been cancelled.";
                 break;
             case 2:
@@ -229,7 +232,13 @@ public class OrderPaymentService {
         customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
         return customerOrderPayment.getOrderState();
     }
+    
+    public void merge_entity_content(int state , Long order_seq){
+            CustomerOrderPayment customerOrderPayment;
+            customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
+            customerOrderPayment.setOrderState(state);
+            entityManager.merge(customerOrderPayment);
 
-
+    }
 
 }

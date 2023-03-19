@@ -9,4 +9,5 @@ import java.util.List;
 public interface CustomerOrderPaymentRepository  extends JpaRepository<CustomerOrderPayment, Long> {
     List<OrderListMapping> findBySellerId(String sellerId);
     CustomerOrderPayment findBySeq(Long seq);
+
 }
