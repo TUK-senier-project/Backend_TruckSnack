@@ -7,5 +7,6 @@ public interface OrderListMapping {
     String getCustomerId();
     String getSellerId();
     int getOrderTotalPrice();
+    int getOrderState();
     LocalDateTime getIsCreated();
 }

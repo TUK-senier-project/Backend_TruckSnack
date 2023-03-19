@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
+import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListDetailMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import Backend_TruckSnack.TruckSnack.service.OrderPaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,9 +66,29 @@ public class OrderPaymentController {
     }
 
     @PostMapping("/orderPayment/detail-order-list/")
-    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData ){
+    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData ) throws JsonProcessingException {
         log.info("OrderList Detail >> Seq ={}" , customerOrderPaymentData.getSeq());
-        return null;
+        List<OrderListDetailMapping> order_detail_list;
+        order_detail_list= orderPaymentService.order_list_detail_service(customerOrderPaymentData.getSeq());
+        if(order_detail_list.isEmpty()){
+            return (ResponseEntity) ResponseEntity.noContent();
+        }
+        else{
+            String json = objectMapper.writeValueAsString(order_detail_list);
+            log.info(json);
+            return ResponseEntity.ok(json);
+        }
+
+    }
+    @PostMapping("/orderPayment/order_check")
+    public ResponseEntity order_check(@RequestBody CustomerOrderPayment customerOrderPaymentData){
+        Long order_seq = customerOrderPaymentData.getSeq();
+        log.info("Order_check >> order_seq = {}" , order_seq);
+        String get_info;
+        get_info = orderPaymentService.order_check(order_seq);
+        log.info(get_info);
+
+        return ResponseEntity.ok(get_info);
     }
 
 }

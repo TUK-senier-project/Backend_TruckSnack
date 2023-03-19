@@ -30,7 +30,8 @@ public class CustomerOrderPayment {
     private String sellerId;
     @Column(name = "ORDER_TOTAL_PRICE",nullable = true)
     private int orderTotalPrice;
-
+    @Column(name = "ORDER_STATE",nullable = false)
+    private int orderState;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
     private LocalDateTime isCreated;
