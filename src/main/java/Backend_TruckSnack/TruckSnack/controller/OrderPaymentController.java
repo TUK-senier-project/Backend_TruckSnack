@@ -102,4 +102,14 @@ public class OrderPaymentController {
         return ResponseEntity.ok(get_info);
     }
 
+    @PostMapping("/orderPayment/order_complete")
+    public ResponseEntity order_complete(@RequestBody CustomerOrderPayment customerOrderPaymentData){
+        Long order_seq = customerOrderPaymentData.getSeq();
+        log.info("Order_cancel >> order_seq = {}" , order_seq);
+        String get_info;
+        get_info = orderPaymentService.order_complete(order_seq);
+        log.info(get_info);
+        return ResponseEntity.ok(get_info);
+    }
+
 }
