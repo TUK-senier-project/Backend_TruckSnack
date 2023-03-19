@@ -1,6 +1,5 @@
 package Backend_TruckSnack.TruckSnack.service;
 
-import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
@@ -20,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderPaymentService {
+
     private final OrderPaymentRepository orderPaymentRepository;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final FoodRepository foodRepository;
@@ -40,10 +40,11 @@ public class OrderPaymentService {
      */
     private final int order_state_create = 0;
     private final int order_state_waiting = 1;
-    private final int order_state_cancle = 2;
+    private final int order_state_cancel = 2;
     private final int order_state_check = 3;
     private final int order_state_complete = 4;
 
+    private  final CustomerOrderPayment customerOrderPayment;
     public String order_check(Long order_seq){
         /**
          * 해야할것
@@ -53,12 +54,7 @@ public class OrderPaymentService {
          */
         int get_order_state = 10;
         String return_text;
-        CustomerOrderPayment customerOrderPayment;
-        //log.info(String.valueOf(order_seq));
-        customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
-        //log.info(String.valueOf(customerOrderPayment));
-
-        get_order_state = customerOrderPayment.getOrderState();
+        get_order_state = find_by_orderState(order_seq);
 
         switch (get_order_state){
             case 0:
@@ -66,6 +62,7 @@ public class OrderPaymentService {
                 break;
             case 1 :
                 log.info("orderSeq : {} -- is check",order_seq );
+                //CustomerOrderPayment customerOrderPayment = null;
                 customerOrderPayment.setOrderState(order_state_check);  //state number : 3;
                 customerOrderPaymentRepository.save(customerOrderPayment);
                 return_text ="orderSeq : "+order_seq+" .. check";
@@ -87,6 +84,44 @@ public class OrderPaymentService {
 
         return return_text;
 
+    }
+
+    public String order_cancel(Long order_seq){
+
+        int get_order_state = 10;
+        log.info(String.valueOf(order_seq));
+        String return_text = "SERVER ERROR - PLEASE CONNECT - me";
+        get_order_state = find_by_orderState(order_seq);
+        log.info(String.valueOf(get_order_state));
+
+        switch (get_order_state){
+            case 0:
+                return_text = "maybe create Error : please tell me";
+                break;
+            case 1:
+                log.info("orderSeq : {} -- is check",order_seq );
+                customerOrderPayment.setOrderState(order_state_cancel);  //state number : 2;
+                customerOrderPaymentRepository.save(customerOrderPayment);
+                return_text = "Your order has been cancelled.";
+                break;
+            case 2:
+                return_text = "Your order already cancelled.";
+                break;
+            case 3:
+                String seller_phoneNumber; String seller_id;
+                seller_id = customerOrderPaymentRepository.findBySeq(order_seq).getSellerId();
+                log.info("order Cancel  : seller-id : {}" , seller_id);
+                seller_phoneNumber = sellerRepository.findById(seller_id).getPhoneNumber();
+                return_text = "Your order has already been placed - please contact us directly at this number : "+seller_phoneNumber;
+                break;
+            case 4:
+                return_text = "Your order already complete";
+                break;
+            default:
+                return_text = "server ERROR";
+                break;
+        }
+        return return_text;
     }
 
     public List<OrderListDetailMapping>order_list_detail_service(Long customer_orderPayment_seq){
@@ -185,6 +220,14 @@ public class OrderPaymentService {
 
     public String find_by_sellerId(Long seller_seq){
         return sellerRepository.findBySeq(seller_seq).getId();
+    }
+
+
+    public int find_by_orderState(Long order_seq){
+        CustomerOrderPayment customerOrderPayment;
+        //log.info(String.valueOf(order_seq));
+        customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
+        return customerOrderPayment.getOrderState();
     }
 
 

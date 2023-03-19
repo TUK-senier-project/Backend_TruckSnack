@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.domain;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
         schema = "SnackTest"
 )
 @Data
+@Component
 public class CustomerOrderPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
+import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListDetailMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.OrderListMapping;
 import Backend_TruckSnack.TruckSnack.service.OrderPaymentService;
@@ -88,6 +89,16 @@ public class OrderPaymentController {
         get_info = orderPaymentService.order_check(order_seq);
         log.info(get_info);
 
+        return ResponseEntity.ok(get_info);
+    }
+
+    @PostMapping("/orderPayment/order_cancel")
+    public ResponseEntity order_cancel(@RequestBody CustomerOrderPayment customerOrderPaymentData){
+        Long order_seq = customerOrderPaymentData.getSeq();
+        log.info("Order_cancel >> order_seq = {}" , order_seq);
+        String get_info;
+        get_info = orderPaymentService.order_cancel(order_seq);
+        log.info(get_info);
         return ResponseEntity.ok(get_info);
     }
 
