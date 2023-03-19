@@ -48,8 +48,10 @@ public class OrderPaymentService {
     private final int order_state_cancel = 2;
     private final int order_state_check = 3;
     private final int order_state_complete = 4;
+    private String return_text = "SERVER ERROR - PLEASE CONNECT - me";
 
-    private  final CustomerOrderPayment customerOrderPayment;
+    private int get_order_state = 10;
+    private CustomerOrderPayment customerOrderPayment;
 
     public String order_check(Long order_seq){
         /**
@@ -58,8 +60,6 @@ public class OrderPaymentService {
          * 셋팅해서 번호를 3번으로 state-check 상태로 변환
          * 반환
          */
-        int get_order_state = 10;
-        String return_text;
         get_order_state = find_by_orderState(order_seq);
 
         switch (get_order_state){
@@ -92,9 +92,7 @@ public class OrderPaymentService {
 
     public String order_cancel(Long order_seq){
 
-        int get_order_state = 10;
         log.info(String.valueOf(order_seq));
-        String return_text = "SERVER ERROR - PLEASE CONNECT - me";
         get_order_state = find_by_orderState(order_seq);
         log.info(String.valueOf(get_order_state));
 
@@ -125,6 +123,36 @@ public class OrderPaymentService {
                 break;
         }
         return return_text;
+    }
+
+    public String order_complete(Long order_seq){
+        log.info(String.valueOf(order_seq));
+        get_order_state = find_by_orderState(order_seq);
+        log.info(String.valueOf(get_order_state));
+
+        switch (get_order_state){
+            case 0:
+                return_text = "maybe create Error : please tell me";
+                break;
+            case 1:
+                return_text = "Please, confirm your order first";
+                break;
+            case 2:
+                return_text = "this order cancel";
+                break;
+            case 3:
+                merge_entity_content(order_state_complete , order_seq);
+                return_text = "order complete";
+                break;
+            case 4:
+                return_text = "Your order already complete";
+                break;
+            default:
+                return_text = "server ERROR";
+                break;
+        }
+        return return_text;
+
     }
 
     public List<OrderListDetailMapping>order_list_detail_service(Long customer_orderPayment_seq){
@@ -232,7 +260,7 @@ public class OrderPaymentService {
         customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
         return customerOrderPayment.getOrderState();
     }
-    
+
     public void merge_entity_content(int state , Long order_seq){
             CustomerOrderPayment customerOrderPayment;
             customerOrderPayment = customerOrderPaymentRepository.findBySeq(order_seq);
