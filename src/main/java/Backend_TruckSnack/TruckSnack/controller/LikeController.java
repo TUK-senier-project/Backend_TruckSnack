@@ -2,7 +2,10 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.LikeFood;
 
+import Backend_TruckSnack.TruckSnack.repository.dto.MyLikeListDTO;
 import Backend_TruckSnack.TruckSnack.service.LikeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,8 @@ public class LikeController {
         this.likeSerive = likeSerive;
     }
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @ResponseBody
     @PostMapping("/like/like_seller")
     public ResponseEntity like_seller(@RequestBody LikeFood likeData){
@@ -31,6 +36,24 @@ public class LikeController {
         }else{
             return ResponseEntity.ok(save_result);
         }
+
+    }
+
+    @ResponseBody
+    @PostMapping("/like/my_like/")
+    public ResponseEntity<String> my_like(@RequestBody LikeFood likeData) throws JsonProcessingException {
+        String customer_id;
+        MyLikeListDTO myLikeListDTO;
+
+        customer_id = likeData.getCustomerId();
+        log.info("customer_id :{}" , customer_id);
+        myLikeListDTO= likeSerive.my_like_service(customer_id);
+
+        String json = objectMapper.writeValueAsString(myLikeListDTO);
+        System.out.println(json);
+
+
+        return ResponseEntity.ok(json);
 
     }
 }
