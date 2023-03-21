@@ -12,4 +12,5 @@ public interface LikeFoodRepository extends JpaRepository<LikeFood, Long> {
 
     List<MyLikeMapping> findByCustomerId(String customerId);
 
+
 }

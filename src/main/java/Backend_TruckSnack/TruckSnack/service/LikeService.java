@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +24,15 @@ import java.util.stream.Stream;
 @Slf4j
 public class LikeService {
     @Autowired
+    private EntityManager entityManager;
+    @Autowired
     LikeFoodRepository likeRepository;
     @Autowired
     SellerRepository sellerRepository;
     CustomerRepository customerRepository;
+
+    int is_activate = 0 ;
+    int is_Disabled = 1;
 
     public String like_seller_service(String seller_id , String customer_id){
         if(seller_id.isEmpty() || customer_id.isEmpty()){
@@ -35,8 +41,24 @@ public class LikeService {
             Optional<LikeFood> likeFood = likeRepository.findBySellerIdAndCustomerId(seller_id , customer_id);
             if(likeFood.isPresent()){
                 //값이 존재함
-                log.info("해당하는 찜하기는 이미 존재합니다.");
-                return "해당 찜하기는 이미 존재";
+                // activate 상태확인 - // 0 , 이미존재  // 1, 다시 활성화
+                int check_activate ;
+                check_activate = likeFood.get().getActivate();
+                if(check_activate == 0){
+                    log.info("해당하는 찜하기는 이미 존재합니다.");
+                    return "해당 찜하기는 이미 존재";
+                }
+                else if(check_activate == 1){
+                    log.info("찜하기 재선택 -- 활성화..");
+                    likeFood.get().setActivate(is_activate);
+                    entityManager.merge(likeFood);
+                    log.info("찜하기 재선택 -- 활성화..완료");
+                    return "해당 찜하기를 재 활성화 하였습니다.";
+                }else{
+                    log.info("찜하기 >> 에러");
+                    return "에러 -- 관리자에게 문의하십시오";
+                }
+
             }
             else{
                 //값이 존재안함
@@ -54,6 +76,28 @@ public class LikeService {
 
     }
 
+    public String like_cancel_service(String customer_id , String seller_id){
+
+        if(seller_id.isEmpty() || customer_id.isEmpty()){
+            return "NULL";
+        }else {
+            Optional<LikeFood> likeFood = likeRepository.findBySellerIdAndCustomerId(seller_id , customer_id);
+            if(likeFood.isPresent()){
+                //값이 존재함
+                /**
+                 * activate를 비활성화 시키면됨 -> 어차피 0이던 1이던 취소는 0이니까 .. 크게 의미없을듯 .. 생각해볼것
+                 */
+                likeFood.get().setActivate(is_Disabled);
+                return "취소하였습니다.";
+
+
+            }else{
+                return "찜하지 않은 가계입니다.";
+            }
+        }
+
+    }
+
     public MyLikeListDTO my_like_service(String customer_id){
         List<MyLikeMapping> myLikeList;
 
@@ -67,6 +111,12 @@ public class LikeService {
         List<String> myLike_businessName_list= new ArrayList<String >();
 
         for(int i =0; i<myLikeList.size(); i++){
+            /**
+             * activate 필터 적용 시작
+             */
+            //activate 시작
+            myLikeList = myLikeList.stream().filter(s -> s.getActivate() == 0 ).collect(Collectors.toList());
+            //activate 종료
             temp_seller_id = myLikeList.get(i).getSellerId();
             log.info("my Like List >> {} : {}",i,temp_seller_id);
 

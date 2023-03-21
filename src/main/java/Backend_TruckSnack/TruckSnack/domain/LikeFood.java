@@ -27,6 +27,8 @@ public class LikeFood {
     private String customerId;
     @JoinColumn(name = "Seller_ID")
     private String sellerId;
+    @Column(name = "ACTIVATE",nullable = false)
+    private int activate;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
     private LocalDateTime isCreated;

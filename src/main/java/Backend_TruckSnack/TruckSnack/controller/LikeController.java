@@ -22,17 +22,33 @@ public class LikeController {
     }
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
+    private String customer_id , seller_id;
     @ResponseBody
     @PostMapping("/like/like_seller")
     public ResponseEntity like_seller(@RequestBody LikeFood likeData){
-        String customer_id , seller_id;
+
         customer_id = likeData.getCustomerId();
         seller_id = likeData.getSellerId();
         log.info("customer_id :{} , seller_id : {}" , customer_id , seller_id);
         String save_result = likeSerive.like_seller_service(seller_id , customer_id);
         if(save_result.equals("찜하기 완료")){
             return ResponseEntity.ok("찜하기 완료");
+        }else{
+            return ResponseEntity.ok(save_result);
+        }
+
+    }
+
+    @ResponseBody
+    @PostMapping("/like/like_cancel_seller")
+    public ResponseEntity like_cancel_seller(@RequestBody LikeFood likeData){
+        customer_id = likeData.getCustomerId();
+        seller_id = likeData.getSellerId();
+        log.info("customer_id :{} , seller_id : {}" , customer_id , seller_id);
+
+        String save_result = likeSerive.like_cancel_service(seller_id , customer_id);
+        if(save_result.equals("취소하였습니다.")){
+            return ResponseEntity.ok("취소하였습니다.");
         }else{
             return ResponseEntity.ok(save_result);
         }
@@ -56,4 +72,7 @@ public class LikeController {
         return ResponseEntity.ok(json);
 
     }
+
+
+
 }
