@@ -46,7 +46,7 @@ public class LikeController {
         seller_id = likeData.getSellerId();
         log.info("customer_id :{} , seller_id : {}" , customer_id , seller_id);
 
-        String save_result = likeSerive.like_cancel_service(seller_id , customer_id);
+        String save_result = likeSerive.like_cancel_service(customer_id, seller_id);
         if(save_result.equals("취소하였습니다.")){
             return ResponseEntity.ok("취소하였습니다.");
         }else{

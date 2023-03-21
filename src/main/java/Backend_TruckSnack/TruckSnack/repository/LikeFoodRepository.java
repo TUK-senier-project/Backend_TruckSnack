@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LikeFoodRepository extends JpaRepository<LikeFood, Long> {
     Optional<LikeFood> findBySellerIdAndCustomerId(String sellerId , String customerId);
-
+    LikeFood findBySeq(Long seq);
     List<MyLikeMapping> findByCustomerId(String customerId);
 
 
