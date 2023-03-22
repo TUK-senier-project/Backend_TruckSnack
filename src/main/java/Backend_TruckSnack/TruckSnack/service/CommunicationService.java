@@ -53,7 +53,7 @@ public class CommunicationService {
         CustomerOrderPayment temp_customerOrderPayment ;
         temp_customerOrderPayment = customerOrderPaymentRepository.findBySeq(orderPayment_seq);
 
-        if ((temp_customerOrderPayment.toString() != null) || (temp_customerOrderPayment.getOrderState() != 4)) {
+        if ((temp_customerOrderPayment.toString() == null) || (temp_customerOrderPayment.getOrderState() != 4)) {
             log.info("없는 주문 or 주문이 완료되지 않음");
             return false;
         }else{
