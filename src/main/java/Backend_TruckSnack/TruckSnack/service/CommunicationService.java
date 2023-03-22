@@ -5,6 +5,7 @@ import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.repository.CommunicationRepositroy;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
+import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.io.IOException;
 public class CommunicationService {
 
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
+    private final SellerRepository sellerRepository;
     private final CommunicationRepositroy communicationRepositroy;
     public String review_grade_service(@RequestBody Communication communicationData)throws IOException {
         /**
@@ -29,7 +31,8 @@ public class CommunicationService {
         if(check_orderPayment_seq(communicationData.getSeq())){
             log.info("리뷰 & 평점 Start");
             String get_review = communicationData.getReview();
-            Double get_grade = communicationData.getGrade();
+            double get_grade = communicationData.getGrade();
+            double set_grade;
             //save start
             communicationRepositroy.save(
                 Communication.builder()
@@ -39,6 +42,16 @@ public class CommunicationService {
                         .build()
             );
             //save End
+            set_grade = calc_grade(communicationData.getCustomerOrderPaymentSeq() , get_grade);
+
+            if(merge_seller_grade(set_grade)){
+                //성공
+                log.info("seller grade merge success");
+            }else {
+                //실패
+                log.info("seller grade merge fail");
+            }
+
         }
         else {
             log.info("주문서 확인결과 ... 문제 발생");
@@ -63,6 +76,29 @@ public class CommunicationService {
 
     }
 
+    public double calc_grade(Long orderPayment_seq , double grade){
+        String seller_id ;
+        double before_grade ,get_grade ,after_grade , return_grade;
+        get_grade = grade;
 
+        seller_id = customerOrderPaymentRepository.findBySeq(orderPayment_seq).getSellerId();
+        before_grade = sellerRepository.findById(seller_id).getGrade();
+        after_grade = calc_grade_gro(before_grade , get_grade);
 
+        return_grade = after_grade;
+
+        return return_grade;
+    }
+
+    public double calc_grade_gro(double before_grade , double get_grade){
+        double after_grade = 0;
+        // 로직
+        // 로직
+        return after_grade;
+    }
+
+    public boolean merge_seller_grade(double get_grade){
+
+        return false;
+    }
 }

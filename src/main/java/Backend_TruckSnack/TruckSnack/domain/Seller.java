@@ -43,6 +43,8 @@ public class Seller {
     private int deadline;
     @Column(name = "PHONE_NUMBER",nullable = true ,length = 11)
     private String phoneNumber;
+    @Column(name = "Grade",nullable = true)
+    private double grade;
     @Column(name = "SELLER_IMG_S3_URL",nullable = true,length = 100)
     private String sellerImgS3Url;
     @Column(name = "LOCATION",nullable = true,length = 50)

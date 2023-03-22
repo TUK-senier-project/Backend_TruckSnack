@@ -14,6 +14,7 @@ import java.io.IOException;
 @Slf4j
 public class SellerService {
     private final SellerRepository sellerRepository;
+    private static double grade_sect = 0.0;
 
     public String register_seller_service(@RequestBody Seller sellerData)throws IOException{
         sellerRepository.save(
@@ -24,6 +25,7 @@ public class SellerService {
                         .content(sellerData.getContent())
                         .category(sellerData.getCategory())
                         .deadline(sellerData.getDeadline())
+                        .grade(grade_sect)
                         .phoneNumber(sellerData.getPhoneNumber())
                         .location(sellerData.getLocation())
                         .build()

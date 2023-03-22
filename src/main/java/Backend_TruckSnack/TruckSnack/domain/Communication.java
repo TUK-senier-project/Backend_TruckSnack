@@ -25,11 +25,11 @@ public class Communication {
     private Long seq;
 
     @JoinColumn(name="CUSTOMER_ORDERE_PAYMENT_SEQ")
-    private String customerOrderPaymentSeq;
+    private Long customerOrderPaymentSeq;
     @Column(name = "REVIEW",nullable = false , length = 200)
     private String review;
     @Column(name = "GRADE",nullable = false)
-    private Double grade;
+    private double grade;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
     private LocalDateTime isCreated;

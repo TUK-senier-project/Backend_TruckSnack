@@ -5,5 +5,6 @@ public interface FoodListMapping {
     String getBusinessName();
     int getDeadline();
     String getPhoneNumber();
+    Double getGrade();
     String getSellerImgS3Url();
 }
