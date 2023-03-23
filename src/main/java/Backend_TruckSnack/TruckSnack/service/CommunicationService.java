@@ -3,21 +3,26 @@ package Backend_TruckSnack.TruckSnack.service;
 import Backend_TruckSnack.TruckSnack.domain.Communication;
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
+import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.repository.CommunicationRepositroy;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CommunicationService {
-
+    @Autowired
+    private EntityManager entityManager;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final SellerRepository sellerRepository;
     private final CommunicationRepositroy communicationRepositroy;
@@ -33,6 +38,7 @@ public class CommunicationService {
             String get_review = communicationData.getReview();
             double get_grade = communicationData.getGrade();
             double set_grade;
+            String seller_id;
             //save start
             communicationRepositroy.save(
                 Communication.builder()
@@ -42,14 +48,20 @@ public class CommunicationService {
                         .build()
             );
             //save End
+            
+            // setting start
             set_grade = calc_grade(communicationData.getCustomerOrderPaymentSeq() , get_grade);
+            seller_id = find_seller_id(communicationData.getCustomerOrderPaymentSeq());
+            // setting End
 
-            if(merge_seller_grade(set_grade)){
+            if(merge_seller_grade(seller_id , set_grade)){
                 //성공
                 log.info("seller grade merge success");
+                return "review&grade complete";
             }else {
                 //실패
                 log.info("seller grade merge fail");
+                return "please , some Error";
             }
 
         }
@@ -58,8 +70,6 @@ public class CommunicationService {
             return "some Error about Customer_order_payment - please , contact me";
         }
 
-
-        return "Success";
     }
 
     public boolean check_orderPayment_seq(Long orderPayment_seq){
@@ -97,8 +107,19 @@ public class CommunicationService {
         return after_grade;
     }
 
-    public boolean merge_seller_grade(double get_grade){
+    public String find_seller_id(Long customer_orderPayment_seq){
+        String seller_id;
+        seller_id = customerOrderPaymentRepository.findBySeq(customer_orderPayment_seq).getSellerId();
+        return seller_id;
+    }
 
-        return false;
+    @Transactional
+    public boolean merge_seller_grade(String seller_id , double get_grade){
+        Seller seller;
+        seller = sellerRepository.findById(seller_id);
+        seller.setGrade(get_grade);
+        entityManager.merge(seller);
+        log.info("seller_ 평점 업데이트 완료...");
+        return true;
     }
 }
