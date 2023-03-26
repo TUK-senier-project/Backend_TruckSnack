@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(
         name = "food" ,
-        schema = "SnackTest"
+        schema = "truck_snack_db"
 )
 @Data
 public class Food {

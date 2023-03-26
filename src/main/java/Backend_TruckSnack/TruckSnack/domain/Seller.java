@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(
         name = "seller" ,
-        schema = "SnackTest",
+        schema = "truck_snack_db",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "business_name_unique",
