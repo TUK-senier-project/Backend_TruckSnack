@@ -67,7 +67,7 @@ public class OrderPaymentController {
     }
 
     @PostMapping("/orderPayment/detail-order-list/")
-    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData ) throws JsonProcessingException {
+    public ResponseEntity detail_order_list(@RequestBody CustomerOrderPayment customerOrderPaymentData) throws JsonProcessingException {
         log.info("OrderList Detail >> Seq ={}" , customerOrderPaymentData.getSeq());
         List<OrderListDetailMapping> order_detail_list;
         order_detail_list= orderPaymentService.order_list_detail_service(customerOrderPaymentData.getSeq());

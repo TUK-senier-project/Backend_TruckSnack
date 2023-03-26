@@ -10,4 +10,6 @@ public interface CustomerOrderPaymentRepository  extends JpaRepository<CustomerO
     List<OrderListMapping> findBySellerId(String sellerId);
     CustomerOrderPayment findBySeq(Long seq);
 
+    int countBySellerId(String sellerId);
+
 }
