@@ -4,10 +4,9 @@ import Backend_TruckSnack.TruckSnack.domain.Communication;
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
-import Backend_TruckSnack.TruckSnack.repository.CommunicationRepositroy;
-import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
-import Backend_TruckSnack.TruckSnack.repository.RatingRepository;
-import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
+import Backend_TruckSnack.TruckSnack.repository.*;
+import Backend_TruckSnack.TruckSnack.repository.dto.ReviewDTO;
+import Backend_TruckSnack.TruckSnack.util.CustomerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,11 @@ public class CommunicationService {
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final SellerRepository sellerRepository;
     private final CommunicationRepositroy communicationRepositroy;
+    private final CustomerRepository customerRepository;
     private final RatingRepository ratingRepository;
-    public String review_grade_service(@RequestBody Communication communicationData)throws IOException {
+
+    private final CustomerUtil customerUtil;
+    public String review_grade_service(@RequestBody ReviewDTO reviewDTO)throws IOException {
         log.info("review & grade Start");
         /**
          * 리뷰 & 평점
@@ -37,37 +39,51 @@ public class CommunicationService {
          * 2. 평점을 기존 셀러 평점에 가중하여 sum 하는 것  (베지리안)
          * 3. 리뷰와 평점 정보에 대해 저장
          */
-        log.info("OrderPayment SEQ : {}" , communicationData.getCustomerOrderPaymentSeq());
-        if(check_orderPayment_seq(communicationData.getCustomerOrderPaymentSeq())){
+        log.info("OrderPayment SEQ : {}" , reviewDTO.getCommunication().getCustomerOrderPaymentSeq());
+        if(check_orderPayment_seq(reviewDTO.getCommunication().getCustomerOrderPaymentSeq())){
             log.info("리뷰 & 평점 Start");
-            String get_review = communicationData.getReview();
-            double get_grade = communicationData.getGrade();
+            String get_review = reviewDTO.getCommunication().getReview();
+            double get_grade = reviewDTO.getCommunication().getGrade();
             double set_grade;
             int set_total_vote;
+            String customer_id = reviewDTO.getCustomer_id();
             String seller_id;
-            //save start
-            communicationRepositroy.save(
-                Communication.builder()
-                        .customerOrderPaymentSeq(communicationData.getCustomerOrderPaymentSeq())
-                        .review(get_review)
-                        .grade(get_grade)
-                        .build()
-            );
-            //save End
-            // setting start
-            set_grade = calc_grade(communicationData.getCustomerOrderPaymentSeq() , get_grade);
-            seller_id = find_seller_id(communicationData.getCustomerOrderPaymentSeq());
-            // setting End
+            String customer_nickName;
+            customer_nickName = customerRepository.findById(reviewDTO.getCustomer_id()).getName();
+            seller_id = find_seller_id(reviewDTO.getCommunication().getCustomerOrderPaymentSeq());
 
-            if(merge_seller_grade(seller_id , set_grade)){
-                //성공
-                log.info("seller grade merge success");
-                return "review&grade complete";
-            }else {
-                //실패
-                log.info("seller grade merge fail");
-                return "please , some Error";
+            if(customerUtil.check_id_util(customer_id)){
+                //save start
+                communicationRepositroy.save(
+                        Communication.builder()
+                                .customerOrderPaymentSeq(reviewDTO.getCommunication().getCustomerOrderPaymentSeq())
+                                .review(get_review)
+                                .grade(get_grade)
+                                .customerNickName(customer_nickName)
+                                .sellerId(seller_id)
+                                .build()
+                );
+                //save End
+                // setting start
+                set_grade = calc_grade(reviewDTO.getCommunication().getCustomerOrderPaymentSeq() , get_grade);
+
+                // setting End
+
+                if(merge_seller_grade(seller_id , set_grade)){
+                    //성공
+                    log.info("seller grade merge success");
+                    return "review&grade complete";
+                }else {
+                    //실패
+                    log.info("seller grade merge fail");
+                    return "please , some Error";
+                }
             }
+            else{
+                log.info("주문서 확인결과 ... customer_id 문제 발생");
+                return "please , customer_id ERROR";
+            }
+
 
         }
         else {

@@ -23,7 +23,10 @@ public class Communication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ")
     private Long seq;
-
+    @JoinColumn(name="CUSTOMER_NICK_NAME")
+    private String customerNickName;
+    @JoinColumn(name="seller_id")
+    private String sellerId;
     @JoinColumn(name="CUSTOMER_ORDERE_PAYMENT_SEQ")
     private Long customerOrderPaymentSeq;
     @Column(name = "REVIEW",nullable = false , length = 200)

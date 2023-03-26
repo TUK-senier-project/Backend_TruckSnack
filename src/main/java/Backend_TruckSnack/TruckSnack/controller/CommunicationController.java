@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Communication;
+import Backend_TruckSnack.TruckSnack.repository.dto.ReviewDTO;
 import Backend_TruckSnack.TruckSnack.service.CommunicationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,12 @@ public class CommunicationController {
 
     @ResponseBody
     @PostMapping("/communication/review&grade/")
-    public ResponseEntity review_grade(@RequestBody Communication communicationData) throws IOException {
+    public ResponseEntity review_grade(@RequestBody ReviewDTO reviewDTO) throws IOException {
         String return_text;
         log.info("review&Grade : LOG");
-        log.info("customer_order_payment \n SEQ : {} \n grade : {} \n review : {} " , communicationData.getCustomerOrderPaymentSeq(),communicationData.getGrade() , communicationData.getReview());
-        return_text = communicationService.review_grade_service(communicationData);
+        log.info("customer_order_payment \n SEQ : {} \n grade : {} \n review : {} \n customer_id :{}" , reviewDTO.getCommunication().getCustomerOrderPaymentSeq() , reviewDTO.getCommunication().getGrade(), reviewDTO.getCommunication().getReview(), reviewDTO.getCustomer_id());
+        return_text = communicationService.review_grade_service(reviewDTO);
         String json = objectMapper.writeValueAsString(return_text);
-
 
         return ResponseEntity.ok(json);
     }
