@@ -32,4 +32,6 @@ public class Rating {
     private int totalVote;
     @Column(name = "SERVICE_GRADE",nullable = false)
     private double ServiceGrade;
+    @Column(name = "CATEGORY",nullable = false)
+    private int category;
 }

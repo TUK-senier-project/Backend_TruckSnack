@@ -2,7 +2,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Communication;
 import Backend_TruckSnack.TruckSnack.service.CommunicationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,23 +15,25 @@ import java.io.IOException;
 @Slf4j
 @Controller
 public class CommunicationController {
-    //private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     private final CommunicationService communicationService;
 
-    public CommunicationController(CommunicationService communicationService) {
+    public CommunicationController(ObjectMapper objectMapper, CommunicationService communicationService) {
+        this.objectMapper = objectMapper;
         this.communicationService = communicationService;
     }
 
     @ResponseBody
     @PostMapping("/communication/review&grade/")
     public ResponseEntity review_grade(@RequestBody Communication communicationData) throws IOException {
+        String return_text;
         log.info("review&Grade : LOG");
         log.info("customer_order_payment \n SEQ : {} \n grade : {} \n review : {} " , communicationData.getCustomerOrderPaymentSeq(),communicationData.getGrade() , communicationData.getReview());
-        communicationService.review_grade_service(communicationData);
+        return_text = communicationService.review_grade_service(communicationData);
+        String json = objectMapper.writeValueAsString(return_text);
 
 
-
-        return null;
+        return ResponseEntity.ok(json);
     }
 
 }

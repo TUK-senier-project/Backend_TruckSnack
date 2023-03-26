@@ -6,6 +6,7 @@ import Backend_TruckSnack.TruckSnack.domain.CustomerOrderPayment;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.repository.CommunicationRepositroy;
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
+import Backend_TruckSnack.TruckSnack.repository.RatingRepository;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class CommunicationService {
     @Autowired
@@ -26,6 +28,7 @@ public class CommunicationService {
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
     private final SellerRepository sellerRepository;
     private final CommunicationRepositroy communicationRepositroy;
+    private final RatingRepository ratingRepository;
     public String review_grade_service(@RequestBody Communication communicationData)throws IOException {
         log.info("review & grade Start");
         /**
@@ -56,22 +59,21 @@ public class CommunicationService {
             seller_id = find_seller_id(communicationData.getCustomerOrderPaymentSeq());
             // setting End
 
-//            if(merge_seller_grade(seller_id , set_grade)){
-//                //성공
-//                log.info("seller grade merge success");
-//                return "review&grade complete";
-//            }else {
-//                //실패
-//                log.info("seller grade merge fail");
-//                return "please , some Error";
-//            }
+            if(merge_seller_grade(seller_id , set_grade)){
+                //성공
+                log.info("seller grade merge success");
+                return "review&grade complete";
+            }else {
+                //실패
+                log.info("seller grade merge fail");
+                return "please , some Error";
+            }
 
         }
         else {
             log.info("주문서 확인결과 ... 문제 발생");
             return "some Error about Customer_order_payment - please , contact me";
         }
-    return "test";
     }
 
     public boolean check_orderPayment_seq(Long orderPayment_seq){
@@ -89,34 +91,57 @@ public class CommunicationService {
     }
 
     public double calc_grade(Long orderPayment_seq , double grade){
+        Seller seller;
         String seller_id ;
         double before_grade ,get_grade ,after_grade , return_grade;
         int total_vote;
+        int category_number;
         get_grade = grade;
 
         seller_id = customerOrderPaymentRepository.findBySeq(orderPayment_seq).getSellerId();
-        before_grade = sellerRepository.findById(seller_id).getGrade();
+        seller = sellerRepository.findById(seller_id);
+        before_grade = seller.getGrade();
+        category_number = seller.getCategory();
         total_vote = customerOrderPaymentRepository.countBySellerId(seller_id);
 
-        after_grade = calc_grade_gro(before_grade , get_grade , total_vote);
+
+        after_grade = calc_grade_gro(before_grade , get_grade , total_vote , category_number);
 
         return_grade = after_grade;
 
         return return_grade;
     }
 
-    public double calc_grade_gro(double before_grade , double get_grade , int total_vote){
+    public double calc_grade_gro(double before_grade , double get_grade , int total_vote , int category_number){
         double after_grade = 0;
         log.info("calc_grade_gro : info : before_grade : {} get_grade : {} total_vote : {} " , before_grade , get_grade , total_vote);
         // 로직
         /**
          * Bayesian 평점 계산
          * weighted rating (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
-         * - R은 해당 아이템의 평균 평점 - 계산된 평점
-         * - v는 해당 아이템에 대한 투표 수 - 해당 가계에 대한 투표수
+         * - R은 해당 아이템의 평균 평점 - 이후 평점
+         * - v는 해당 아이템에 대한 투표 수 - 해당 가계에 대한 투표수 - total_vote+1
          * - m은 투표를 고려하는 최소 투표 수 - 10 //test 필요
-         * - C는 전체 아이템의 평균 평점 // 해당 카테고리가 가진 전체 평점
+         * - C는 전체 아이템의 평균 평점 // 이전 평점
+         * - n 반올림 숫자 if 1이면 2번째 자리에서 반올림
          */
+        int n = 1;
+        double v = total_vote+1;
+        double m = 10;
+        double R = get_grade;
+        double C = before_grade;
+//        double R = before_grade+get_grade/2;
+//        double C = ratingRepository.findByCategory(category_number).getServiceGrade();
+        double WR;
+        //Test Start
+        log.info("(WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C");
+        WR = (v / (v+m)) * R + (m / (v+m)) * C;
+        log.info("{} = ({} ÷ ({}+{})) × {} + ({} ÷ ({}+{})) × {}",WR, v , v,m,R,m,v,m,C);
+        after_grade = Math.round(WR * Math.pow(10, n)) / Math.pow(10, n);
+        log.info("반환 값 : 결정된 평점 : {}",after_grade);
+        //Test End
+
+
         // 로직
         return after_grade;
     }
@@ -133,7 +158,6 @@ public class CommunicationService {
         return return_vote;
     }
 
-    @Transactional
     public boolean merge_seller_grade(String seller_id , double get_grade){
         Seller seller;
         seller = sellerRepository.findById(seller_id);
