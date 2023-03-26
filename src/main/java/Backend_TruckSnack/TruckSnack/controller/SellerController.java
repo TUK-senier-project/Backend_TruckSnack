@@ -2,26 +2,40 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.function.SellerFunction;
+import Backend_TruckSnack.TruckSnack.repository.mapping.ReviewListMapping;
 import Backend_TruckSnack.TruckSnack.service.SellerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Controller
 public class SellerController {
     private final SellerService sellerService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
     public SellerController(SellerService sellerService){
         this.sellerService= sellerService;
     }
+
+    @ResponseBody
+    @GetMapping("/seller/review/{seller_id}")
+    public ResponseEntity review_seller(@PathVariable String seller_id) throws JsonProcessingException {
+        log.info("Seller review : id = {}" , seller_id);
+        List<ReviewListMapping> reviewList;
+        reviewList = sellerService.reviewList_seller_service(seller_id);
+
+        String json = objectMapper.writeValueAsString(reviewList);
+        return ResponseEntity.ok(json);
+    }
+
 
     @ResponseBody
     @PostMapping("/seller/register")
