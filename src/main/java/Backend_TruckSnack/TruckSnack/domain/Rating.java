@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(
         name = "Rating" ,
-        schema = "SnackTest"
+        schema = "truck_snack_db"
 )
 @Data
 public class Rating {
