@@ -18,6 +18,15 @@ public class FoodListService {
     private final FoodListRepository foodListRepository;
     private final SellerRepository sellerRepository;
     private final FoodRepository foodRepository;
+
+    public List<FoodListMapping> get_total_seller_service(int time){
+        List<FoodListMapping> total_list;
+
+        total_list = foodListRepository.findByDeadlineGreaterThan(time);
+
+        return total_list;
+    }
+
     public List<FoodListMapping> get_foodList_service(int category){
             List<FoodListMapping> seller_list = null;
             String checkCategory = String.valueOf(category);
