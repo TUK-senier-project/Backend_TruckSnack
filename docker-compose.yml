@@ -22,7 +22,7 @@ services:
       retries: 3
 
     volumes:
-      - ./mysql/conf.d:/etc/mysql/conf.d # MySQL 설정 파일 위치
+      - mysql-data:/var/lib/mysql
     networks:
         - truckSnack-network
   app:
@@ -32,7 +32,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://truck_snack_db:3306/truck_snack_db?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/truck_snack_db?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:

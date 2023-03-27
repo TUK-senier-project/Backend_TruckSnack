@@ -23,7 +23,7 @@ public class FoodListController {
         this.foodListService = foodListService;
     }
 
-    @GetMapping("/food-list/{time}")
+    @GetMapping("/food-list/total/{time}/")
     public ResponseEntity foodList_total_seller(@PathVariable int time) throws JsonProcessingException {
         log.info("food-list >> total seller list time : {}",time);
         List<FoodListMapping> total_list;
