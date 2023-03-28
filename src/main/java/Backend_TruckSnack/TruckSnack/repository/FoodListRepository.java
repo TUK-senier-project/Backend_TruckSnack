@@ -13,4 +13,5 @@ public interface FoodListRepository extends JpaRepository<Seller, Long> {
     List<FoodListMapping> findByCategory(int category);
     List<FoodListMapping> findByDeadlineGreaterThan(int time);
 
+    FoodListMapping findById(String seller_id);
 }

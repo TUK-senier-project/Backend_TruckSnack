@@ -1,8 +1,10 @@
 package Backend_TruckSnack.TruckSnack.service;
 
 import Backend_TruckSnack.TruckSnack.repository.CustomerOrderPaymentRepository;
+import Backend_TruckSnack.TruckSnack.repository.FoodListRepository;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import Backend_TruckSnack.TruckSnack.repository.dto.RankCategoryNumberOfOrdersDTO;
+import Backend_TruckSnack.TruckSnack.repository.mapping.FoodListMapping;
 import Backend_TruckSnack.TruckSnack.repository.mapping.RankCategoryMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,17 +15,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class RankService {
+    private final FoodListRepository foodListRepository;
     private final SellerRepository sellerRepository;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
 
-    public List<RankCategoryNumberOfOrdersDTO>rank_category_order_number_service(int category_number){
+    public List<FoodListMapping> rank_category_order_number_service(int category_number){
         /**
          * 카테고리 - 주문수
          * 해당 카테고리에 셀러들을 조회 - 리스트
@@ -70,16 +72,24 @@ public class RankService {
             }
         });
 
+        /**
+         * 리턴용 리스트 작성
+         */
+        List<FoodListMapping> return_list = new ArrayList<>();
         //정렬 완료
-        log.info("주문수 많은 순으로 정렬 완료");
+        log.info("주문수 많은 순으로 정렬 완료 - 리턴용 리스트 작성 시작");
         order_number_list.forEach(item ->{
+            FoodListMapping temp;
             log.info("id : {} , 주문 수 : {}" , item.getId() , item.getNumberOfOrders());
+            temp=  foodListRepository.findById(item.getId());
+            return_list.add(temp);
+
         });
 
-        return order_number_list;
+        return return_list;
     }
 
-    public List<RankCategoryMapping> rank_category_grade_service(int categoryNumber){
+    public List<FoodListMapping> rank_category_grade_service(int categoryNumber){
         /**
          * 카테고리 - 평점
          * 일단 매핑 - id , grade
@@ -100,12 +110,20 @@ public class RankService {
                 return Double.compare(o2.getGrade(),o1.getGrade());
             }
         });
-
-        seller_list.forEach(item -> {
-            System.out.println(item.getId() +"  "+ item.getGrade());
+        /**
+         * 리턴용 리스트 작성
+         */
+        List<FoodListMapping> return_list = new ArrayList<>();
+        //정렬 완료
+        log.info("주문수 많은 순으로 정렬 완료 - 리턴용 리스트 작성 시작");
+        seller_list.forEach(item ->{
+            FoodListMapping temp;
+            log.info("id : {} , 주문 수 : {}" , item.getId() , item.getGrade());
+            temp=  foodListRepository.findById(item.getId());
+            return_list.add(temp);
 
         });
 
-        return seller_list;
+        return return_list;
     }
 }
