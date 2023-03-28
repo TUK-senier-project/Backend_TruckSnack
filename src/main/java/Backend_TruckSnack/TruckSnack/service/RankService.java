@@ -22,7 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RankService {
     private final SellerRepository sellerRepository;
     private final CustomerOrderPaymentRepository customerOrderPaymentRepository;
-    public void category_rank(){
+
+    public List<RankCategoryNumberOfOrdersDTO>rank_category_order_number_service(int category_number){
         /**
          * 카테고리 - 주문수
          * 해당 카테고리에 셀러들을 조회 - 리스트
@@ -32,7 +33,7 @@ public class RankService {
          */
         List<RankCategoryMapping> order_id_list;
         List<RankCategoryNumberOfOrdersDTO> order_number_list = new ArrayList<RankCategoryNumberOfOrdersDTO>();
-        order_id_list = sellerRepository.findByCategory(1);
+        order_id_list = sellerRepository.findByCategory(category_number);
         int temp_number_of_orders;
 
         for(int i=0; i<order_id_list.size(); i++){
@@ -55,7 +56,7 @@ public class RankService {
 //                log.info("id : {} , 주문 수 : {}" , item.getId() , item.getNumberOfOrders());
 //            });
         }
-        
+
         log.info("주문수 많은 순으로 정렬 시작");
         order_number_list.forEach(item ->{
             log.info("id : {} , 주문 수 : {}" , item.getId() , item.getNumberOfOrders());
@@ -72,12 +73,13 @@ public class RankService {
         //정렬 완료
         log.info("주문수 많은 순으로 정렬 완료");
         order_number_list.forEach(item ->{
-           log.info("id : {} , 주문 수 : {}" , item.getId() , item.getNumberOfOrders());
+            log.info("id : {} , 주문 수 : {}" , item.getId() , item.getNumberOfOrders());
         });
 
+        return order_number_list;
     }
 
-    public List<RankCategoryMapping> rank_category_grade(int categoryNumber){
+    public List<RankCategoryMapping> rank_category_grade_service(int categoryNumber){
         /**
          * 카테고리 - 평점
          * 일단 매핑 - id , grade

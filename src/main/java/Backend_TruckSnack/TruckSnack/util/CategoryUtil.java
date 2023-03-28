@@ -29,4 +29,16 @@ public class CategoryUtil {
     }
 
 
+    public boolean check_this_category_number(int category_number){
+        int max= max_category_number();
+        // 실패 : 값이 조건에 안맞음
+
+        if(category_number < 1 || category_number>max){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
 }
