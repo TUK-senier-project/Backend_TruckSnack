@@ -32,7 +32,7 @@ public class RankController {
     @GetMapping("/rank/category/{type}&{categoryNumber}/")
     public ResponseEntity category_rank(@PathVariable String type , @PathVariable int categoryNumber) throws JsonProcessingException {
         /**
-         * 유형 : numberOfOrders , grade
+         * 유형 : numberOfOrders , grade , reorder
          * category Number : 1~Max_category
          */
 
@@ -50,6 +50,9 @@ public class RankController {
                 switch (type){
                     case "numberOfOrders" :
                         list = rankService.rank_category_order_number_service(categoryNumber);
+                        break;
+                    case "reorder" :
+                        list = rankService.rank_category_reorder_service(categoryNumber);
                         break;
                     case "grade":
                         list = rankService.rank_category_grade_service(categoryNumber);
