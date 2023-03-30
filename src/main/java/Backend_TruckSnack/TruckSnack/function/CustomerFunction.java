@@ -144,7 +144,7 @@ public class CustomerFunction {
 
         if(check_flag == 0){
             //한글로만 이루어진 경우 허용
-            if(customer_name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+            if(!customer_name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
                 System.out.println("name_check");
                 return 1; //한글이외에 다른 문자가 들어옴
             }
