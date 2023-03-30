@@ -66,7 +66,16 @@ public class SellerService {
     }
     
     public String id_find_seller_service(String bussinessName , String phoneNumber){
-        return sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber).getId();
+        String id;
+        id =sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber).getId();
+        if(id != null){
+            log.info("seller id find -> find id");
+            return id;
+        }else{
+            log.info("seller id find -> find id");
+            return "this name or phoneNumber is null";
+        }
+
     }
 
     public int seq_find_seller_service(String id){

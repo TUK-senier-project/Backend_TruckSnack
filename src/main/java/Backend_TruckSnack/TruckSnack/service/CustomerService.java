@@ -50,6 +50,15 @@ public class CustomerService {
     }
 
     public String id_find_customer_service(String name , String phoneNumber)throws IOException{
-        return customerRepository.findByNameAndPhoneNumber(name,phoneNumber).getId();
+        String id;
+        id = customerRepository.findByNameAndPhoneNumber(name,phoneNumber).getId();
+        if(id != null){
+            log.info("customer id find -> find id");
+            return id;
+        }else{
+            log.info("customer id find -> fail find id");
+            return "this name or phoneNumber is null";
+        }
+
     }
 }
