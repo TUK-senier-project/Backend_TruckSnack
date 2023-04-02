@@ -12,4 +12,5 @@ public interface CustomerOrderPaymentRepository  extends JpaRepository<CustomerO
 
     int countBySellerId(String sellerId);
 
+    CustomerOrderPayment findTopByCustomerIdOrderByIsCreatedDesc(String customer_id);
 }
