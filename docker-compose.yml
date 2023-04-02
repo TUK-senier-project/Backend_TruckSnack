@@ -39,6 +39,8 @@ services:
       context: elasticsearch/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
+    env_file:
+      - ./.env
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
       - elasticsearch:/usr/share/elasticsearch/data:Z
@@ -64,6 +66,8 @@ services:
       context: logstash/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
+    env_file:
+      - ./.env
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
@@ -86,6 +90,8 @@ services:
       context: kibana/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
+    env_file:
+      - ./.env
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
@@ -101,6 +107,8 @@ services:
   mysql:
     image: mysql:5.7
     container_name: truck_snack_db
+    env_file:
+      - ./.env
     ports:
       - "3306:3306"
     environment:
@@ -128,6 +136,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    env_file:
+      - ./.env
     ports:
       - "8080:8080"
     environment:
