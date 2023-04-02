@@ -8,7 +8,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class CategoryUtil {
-    private static int MAX_CATEGORY_NUMBER = 3;
+    public static int MAX_CATEGORY_NUMBER = 3;
 
     private static String CATEGORY_NAME_1 = "붕어삥";
     private static String CATEGORY_NAME_2 = "스테이크";

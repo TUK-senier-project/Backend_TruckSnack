@@ -2,6 +2,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.OrderPayment;
+import Backend_TruckSnack.TruckSnack.repository.dto.RecommendOrderDataDTO;
 import Backend_TruckSnack.TruckSnack.repository.mapping.FoodListMapping;
 import Backend_TruckSnack.TruckSnack.service.RecommendService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,19 +28,35 @@ public class RecommendController {
         this.recommendService = recommendService;
     }
 
-    @PostMapping("/recommend/last_order_familiar_recommend/")
+    @PostMapping("/recommend/orderData/")
     @ResponseBody
-    public ResponseEntity last_order_familiar_recommend_controller(@RequestBody Customer customerData) throws IOException {
-        log.info("recommend controller test : {}",customerData.getId());
-        List<FoodListMapping> list;
-        list = recommendService.last_order_familiar_recommend_service(customerData.getId());
+    public ResponseEntity last_order_recommend_controller(@RequestBody RecommendOrderDataDTO recommendOrderDataDTO) throws IOException {
+        String customer_id = recommendOrderDataDTO.getCustomerId();
+        String select_service = recommendOrderDataDTO.getSelectService();
+        log.info("recommend controller customer_id: {} , select Service : {}",customer_id ,select_service);
 
+        String json;
+        List<FoodListMapping> list;
+
+        switch (select_service) {
+            case "familiar" :
+                list = recommendService.last_order_familiar_recommend_service(customer_id);
+                break;
+            case "new" :
+                list = recommendService.last_order_new_recommend_service(customer_id);
+                break;
+            default:
+                return ResponseEntity.ok("selectService 를 정확히 입력하세요");
+
+        }
         if(list != null){
-            String json = objectMapper.writeValueAsString(list);
+            json = objectMapper.writeValueAsString(list);
             return ResponseEntity.ok(json);
         }else {
             return ResponseEntity.ok("There is no order record or the seller list could not be retrieved from the category.");
         }
+
+
 
     }
 }
