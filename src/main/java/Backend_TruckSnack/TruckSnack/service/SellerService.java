@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,15 +67,16 @@ public class SellerService {
     }
     
     public String id_find_seller_service(String bussinessName , String phoneNumber){
+        Optional<Seller> seller;
+        seller =sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber);
         String id;
-        id =sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber).getId();
-        if(id != null){
-            log.info("seller id find -> find id");
-            return id;
-        }else{
-            log.info("seller id find -> find id");
-            return "this name or phoneNumber is null";
+        try {
+            id = seller.map(Seller::getId).orElseThrow(() -> new RuntimeException("Seller not found"));
+        } catch (RuntimeException e) {
+            id = e.getMessage(); // RuntimeException의 오류 메시지를 id 변수에 저장합니다.
         }
+
+        return id;
 
     }
 
