@@ -5,6 +5,9 @@ import Backend_TruckSnack.TruckSnack.repository.dto.RecommendOrderDataDTO;
 import Backend_TruckSnack.TruckSnack.service.S3Service;
 import Backend_TruckSnack.TruckSnack.service.S3Upload;
 import Backend_TruckSnack.TruckSnack.util.ApiResponse;
+import Backend_TruckSnack.TruckSnack.util.SellerUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -24,9 +27,9 @@ import java.io.IOException;
 @RestController
 public class S3Controller {
     private final S3Upload s3Upload;
-
+    private final SellerUtil sellerUtil;
     private final S3Service s3Service;
-
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     @PostMapping("/upload-Test")
     public ResponseEntity<ApiResponse<String>> uploadFileTest(@RequestParam("images") MultipartFile multipartFile) throws IOException {
         try {
@@ -48,11 +51,27 @@ public class S3Controller {
     }
     @PostMapping("/getImg-Test")
     public ResponseEntity getImgTest(@RequestBody Seller sellerData) throws IOException {
-         String  seller_id = sellerData.getId();
-        InputStreamResource resource = s3Service.s3_img_seller_main_return_service(seller_id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(resource);
+        String  seller_id = sellerData.getId();
+        String logs =null;
+        if(sellerUtil.check_id_util(seller_id)){
+            log.info("아이디 체크 성공");
+            if(sellerUtil.check_img_url_util(seller_id)){
+                log.info("이미지 체크 존재");
+                InputStreamResource resource = s3Service.s3_img_seller_main_return_service(seller_id);
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            }else{
+                log.info("이미지 NULL");
+                logs = "IMG Null";
+            }
+        }
+        else {
+            log.info("아이디 체크 실패");
+            logs = "해당아이디는 없는 아이디 입니다.";
+        }
+        String json = objectMapper.writeValueAsString(logs);
+        return ResponseEntity.ok(json);
     }
 
 

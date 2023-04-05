@@ -4,12 +4,14 @@ import Backend_TruckSnack.TruckSnack.controller.S3Controller;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.repository.CommunicationRepositroy;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
+import Backend_TruckSnack.TruckSnack.repository.dto.SellerLoginDTO;
 import Backend_TruckSnack.TruckSnack.repository.mapping.ReviewListMapping;
 import Backend_TruckSnack.TruckSnack.util.ApiResponse;
 import Backend_TruckSnack.TruckSnack.util.SellerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +33,14 @@ public class SellerService {
     @Autowired
     private EntityManager entityManager;
     private final SellerRepository sellerRepository;
+
     private final CommunicationRepositroy communicationRepositroy;
 
     private final SellerUtil sellerUtil;
 
     private final S3Controller s3Controller;
+
+    private final S3Service s3Service;
 
     private static double grade_sect = 0.0;
 
@@ -81,7 +88,44 @@ public class SellerService {
             return false;
         }
     }
-    
+
+    public SellerLoginDTO login_find_data_service(String seller_id) throws IOException {
+        //setter 안쓰고 매핑으로 해도 되긴하는데 확실히 메모리 리소스를 더 많이 쓸거같네
+
+        Seller sellerData = sellerRepository.findById(seller_id);
+        //seller setter Start
+        Seller responseData = new Seller();
+        responseData.setId(sellerData.getId());
+        responseData.setBusinessName(sellerData.getBusinessName());
+        //seller setter end
+
+        //sellerLoginDTO ->data setting start
+        SellerLoginDTO sellerLoginDTO = new SellerLoginDTO();
+        sellerLoginDTO.setSeller(responseData);
+        //sellerLoginDTO ->data setting end
+
+        //seller get img start
+        if(sellerUtil.check_img_url_util(seller_id)){
+            log.info("login_find_data_service : True" );
+            InputStreamResource inputStreamResource = s3Service.s3_img_seller_main_return_service(seller_id);
+            String base64EncodedImage = Base64.getEncoder().encodeToString(inputStreamResource.getInputStream().readAllBytes());
+            sellerLoginDTO.setBase64EncodedImage(base64EncodedImage);
+
+
+        }else {
+            log.info("login_find_data_service : false" );
+            sellerLoginDTO.setBase64EncodedImage(null);
+
+        }
+        //seller get img end
+
+        return sellerLoginDTO;
+
+
+    }
+
+
+
     public String id_find_seller_service(String bussinessName , String phoneNumber){
         Optional<Seller> seller;
         seller =sellerRepository.findByBusinessNameAndPhoneNumber(bussinessName,phoneNumber);

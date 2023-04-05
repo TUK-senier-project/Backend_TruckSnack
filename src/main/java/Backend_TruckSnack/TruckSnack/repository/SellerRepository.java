@@ -17,4 +17,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     List<RankCategoryMapping> findByCategory(int category);
 
     boolean existsById(String seller_id);
+
+
 }

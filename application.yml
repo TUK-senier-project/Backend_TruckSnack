@@ -20,8 +20,8 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: # accessKey
-      secretKey: # secretkey
+      accessKey: #accessKey
+      secretKey: #secretkey
     s3:
       bucket: truck-snack-bucket
       dir: /img
