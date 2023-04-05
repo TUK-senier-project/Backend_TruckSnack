@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -106,5 +108,15 @@ public class SellerController {
         String json = objectMapper.writeValueAsString(find_id_result);
         return ResponseEntity.ok(json);
     }
+
+    @ResponseBody
+    @PostMapping("/seller/imgUpload/{sellerId}/")
+    public ResponseEntity img_upload_seller(@RequestParam("images") MultipartFile multipartFile ,@PathVariable String sellerId)throws IOException{
+        log.info("img_upload_seller : sellerId : {}",sellerId);
+        String return_msg = sellerService.img_upload_seller_service(multipartFile ,sellerId);
+        String json = objectMapper.writeValueAsString(return_msg);
+        return ResponseEntity.ok(json);
+    }
+
 
 }

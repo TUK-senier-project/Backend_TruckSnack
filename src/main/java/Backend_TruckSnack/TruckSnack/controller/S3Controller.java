@@ -39,4 +39,24 @@ public class S3Controller {
         }
     }
 
+
+    public ResponseEntity<ApiResponse<String>> uploadFile(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+        try {
+            String s3Url = s3Upload.upload(multipartFile);
+            ApiResponse<String> response = ApiResponse.success(HttpStatus.CREATED, s3Url);
+
+            log.info("uploadFile : url 확인 : {}",response.getMessage());
+
+            return ResponseEntity.status(response.getStatus()).body(response);
+
+        } catch (FileSizeLimitExceededException ex) {
+            ApiResponse<String> response = ApiResponse.error(HttpStatus.BAD_REQUEST, "파일 크기가 제한을 초과하였습니다.");
+            return ResponseEntity.status(response.getStatus()).body(response);
+        } catch (Exception ex) {
+            log.error("파일 업로드 중 오류 발생", ex);
+            ApiResponse<String> response = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생하였습니다.");
+            return ResponseEntity.status(response.getStatus()).body(response);
+        }
+    }
+
 }

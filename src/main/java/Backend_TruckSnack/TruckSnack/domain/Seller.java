@@ -45,7 +45,7 @@ public class Seller {
     private String phoneNumber;
     @Column(name = "Grade",nullable = true)
     private double grade;
-    @Column(name = "SELLER_IMG_S3_URL",nullable = true,length = 100)
+    @Column(name = "SELLER_IMG_S3_URL",nullable = true,length = 200)
     private String sellerImgS3Url;
     @Column(name = "LOCATION",nullable = true,length = 50)
     private String location;

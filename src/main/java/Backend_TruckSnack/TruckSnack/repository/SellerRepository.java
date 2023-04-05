@@ -15,4 +15,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     Optional<Seller> findByBusinessNameAndPhoneNumber(String businessName , String phoneNumber);
 
     List<RankCategoryMapping> findByCategory(int category);
+
+    boolean existsById(String seller_id);
 }
