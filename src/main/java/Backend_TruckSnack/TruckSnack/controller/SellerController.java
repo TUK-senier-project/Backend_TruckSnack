@@ -2,16 +2,20 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.function.SellerFunction;
+import Backend_TruckSnack.TruckSnack.repository.dto.SellerLoginDTO;
 import Backend_TruckSnack.TruckSnack.repository.mapping.ReviewListMapping;
 import Backend_TruckSnack.TruckSnack.service.SellerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -84,17 +88,20 @@ public class SellerController {
     @PostMapping("/seller/login")
     public ResponseEntity login_seller(@RequestBody Seller sellerData)throws IOException{
         log.info("Seller login >> id={} , password={}",sellerData.getId() , sellerData.getPassword());
+
         if(sellerService.login_seller_service(sellerData.getId(),sellerData.getPassword())){
             log.info("Seller Login >> 로그인 성공 ... response json 생성중");
-            Seller responseData = new Seller();
-            responseData.setId(sellerData.getId());
+            SellerLoginDTO sellerLoginDTO = sellerService.login_find_data_service(sellerData.getId());
+            String json = objectMapper.writeValueAsString(sellerLoginDTO);
 
-            String json = objectMapper.writeValueAsString(responseData);
-            return ResponseEntity.ok(json);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(json);
         }else {
             log.info("Seller Login >> 로그인 실패 ... response json 생성중");
             return ResponseEntity.ok("login fail");
         }
+
     }
 
     @ResponseBody
@@ -106,5 +113,15 @@ public class SellerController {
         String json = objectMapper.writeValueAsString(find_id_result);
         return ResponseEntity.ok(json);
     }
+
+    @ResponseBody
+    @PostMapping("/seller/imgUpload/{sellerId}/")
+    public ResponseEntity img_upload_seller(@RequestParam("images") MultipartFile multipartFile ,@PathVariable String sellerId)throws IOException{
+        log.info("img_upload_seller : sellerId : {}",sellerId);
+        String return_msg = sellerService.img_upload_seller_service(multipartFile ,sellerId);
+        String json = objectMapper.writeValueAsString(return_msg);
+        return ResponseEntity.ok(json);
+    }
+
 
 }
