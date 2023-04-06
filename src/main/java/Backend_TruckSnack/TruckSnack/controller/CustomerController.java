@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -106,6 +104,13 @@ public class CustomerController {
         String json = objectMapper.writeValueAsString(find_id_result);
         return ResponseEntity.ok(json);
     }
-
+    @ResponseBody
+    @PostMapping("/customer/imgUpload/{customerId}/")
+    public ResponseEntity img_upload_seller(@RequestParam("images") MultipartFile multipartFile , @PathVariable String customerId)throws IOException{
+        log.info("img_upload_customer : customerId : {}",customerId);
+        String return_msg = customerService.img_upload_customer_service(multipartFile , customerId);
+        String json = objectMapper.writeValueAsString(return_msg);
+        return ResponseEntity.ok(json);
+    }
 
 }
