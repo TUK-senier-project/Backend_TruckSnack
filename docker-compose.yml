@@ -145,8 +145,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     healthcheck:
       test: [ "CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1" ]
       interval: 10s
