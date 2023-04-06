@@ -126,7 +126,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
+    entrypoint: /wait-for-mysql.sh
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -145,12 +145,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
-      - mysql
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      mysql:
+        condition: service_healthy
     networks:
       - truckSnack-network
   grafana:
