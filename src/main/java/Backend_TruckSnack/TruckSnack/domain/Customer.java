@@ -46,7 +46,7 @@ public class Customer {
     private String name;
     @Column(name = "PASSWORD",nullable = false ,length = 20)
     private String password;
-    @Column(name = "CUSTOMER_IMG_S3_URL",nullable = true ,length = 100)
+    @Column(name = "CUSTOMER_IMG_S3_URL",nullable = true ,length = 200)
     private String customerImgS3Url;
     @Column(name = "PHONE_NUMBER",nullable = true ,length = 11)
     private String phoneNumber;
