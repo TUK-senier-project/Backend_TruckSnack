@@ -2,6 +2,7 @@ package Backend_TruckSnack.TruckSnack.controller;
 
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.function.CustomerFunction;
+import Backend_TruckSnack.TruckSnack.repository.dto.CustomerLoginDTO;
 import Backend_TruckSnack.TruckSnack.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -83,14 +84,13 @@ public class CustomerController {
 
         if(customerService.login_customer_service(customerData.getId() , customerData.getPassword())){
             log.info("Customer Login >> 로그인 성공... response Json 생성중");
-            Customer responseData = new Customer();
-            responseData.setId(customerData.getId());
+            CustomerLoginDTO customerLoginDTO = customerService.login_find_data_service(customerData.getId());
 
-            String json = objectMapper.writeValueAsString(responseData);
+            String json = objectMapper.writeValueAsString(customerLoginDTO);
             return ResponseEntity.ok(json);
         }else{
             log.info("Customer Login >> 로그인 실패...");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.ok("login fail");
         }
 
     }

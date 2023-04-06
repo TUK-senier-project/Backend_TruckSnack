@@ -4,11 +4,13 @@ import Backend_TruckSnack.TruckSnack.controller.S3Controller;
 import Backend_TruckSnack.TruckSnack.domain.Customer;
 import Backend_TruckSnack.TruckSnack.domain.Seller;
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
+import Backend_TruckSnack.TruckSnack.repository.dto.CustomerLoginDTO;
 import Backend_TruckSnack.TruckSnack.util.ApiResponse;
 import Backend_TruckSnack.TruckSnack.util.CustomerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -31,6 +35,7 @@ public class CustomerService {
     private final CustomerUtil customerUtil;
 
     private final S3Controller s3Controller;
+    private final S3Service s3Service;
 
     public String register_customer_service(@RequestBody Customer customerData)throws IOException{
         customerRepository.save(
@@ -80,6 +85,38 @@ public class CustomerService {
 
     }
 
+    public CustomerLoginDTO login_find_data_service(String customer_id) throws IOException {
+        Customer customerData = customerRepository.findById(customer_id);
+        //customer setting Start
+        Customer responseData = new Customer();
+        responseData.setId(customerData.getId());
+        responseData.setName(customerData.getName());
+        responseData.setPhoneNumber(customerData.getPhoneNumber());
+        //customer setting end
+
+        // CustomerLoginDTO Setting start
+        CustomerLoginDTO customerLoginDTO = new CustomerLoginDTO();
+        customerLoginDTO.setCustomer(responseData);
+
+        // CustomerLoginDTO Setting end
+
+        //customer get img start
+        if(customerUtil.check_id_util(customer_id)){
+            log.info("login_find_data_service : True" );
+            InputStreamResource inputStreamResource = s3Service.s3_img_customer_main_return_service(customer_id);
+            String base64EncodedImage = Base64.getEncoder().encodeToString(inputStreamResource.getInputStream().readAllBytes());
+            customerLoginDTO.setBase64EncodedImage(base64EncodedImage);
+        }else{
+            log.info("login_find_data_service : False" );
+            customerLoginDTO.setBase64EncodedImage(null);
+        }
+        //customer get img end
+
+
+        return customerLoginDTO;
+    }
+
+
     public String img_upload_customer_service(MultipartFile multipartFile , String customerId) throws IOException {
         /**
          * 구매자 대표 이미지 업로드 ..
@@ -120,26 +157,4 @@ public class CustomerService {
         return true;
     }
 
-
-//        if(sellerUtil.check_id_util(sellerId)){
-//            log.info("seller_id : True");
-//            ResponseEntity<ApiResponse<String>> temp = s3Controller.uploadFile(multipartFile);
-//            log.info("img_upload_seller_service : {}",temp.getBody().getMessage());
-//            String s3_url = temp.getBody().getMessage();
-//            if(merge_seller_s3_url(sellerId , s3_url)){
-//                log.info("seller_imgUpload success");
-//                return "seller_imgUpload success : "+s3_url;
-//            }
-//            else{
-//                log.info("seller_imgUpload 실패");
-//                return "seller_imgUpload 실패";
-//            }
-//        }else {
-//            log.info("seller_id : false");
-//            return_log ="seller_id가 존재하지 않습니다.";
-//        }
-//
-//
-//        return return_log;
-//    }
 }
