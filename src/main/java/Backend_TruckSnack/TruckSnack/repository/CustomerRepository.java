@@ -1,14 +1,12 @@
 package Backend_TruckSnack.TruckSnack.repository;
 
 import Backend_TruckSnack.TruckSnack.domain.Customer;
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.NoRepositoryBean;
 
-import javax.persistence.Entity;
 import java.util.Optional;
-
+@NoRepositoryBean
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findById(String id);
 
