@@ -7,4 +7,6 @@ public interface FoodListMapping {
     String getPhoneNumber();
     Double getGrade();
     String getSellerImgS3Url();
+
+    String getLocation();
 }

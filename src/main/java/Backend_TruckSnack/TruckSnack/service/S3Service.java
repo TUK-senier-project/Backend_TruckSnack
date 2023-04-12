@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.service;
 
 import Backend_TruckSnack.TruckSnack.repository.CustomerRepository;
+import Backend_TruckSnack.TruckSnack.repository.FoodRepository;
 import Backend_TruckSnack.TruckSnack.repository.SellerRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
@@ -23,7 +24,19 @@ public class S3Service {
     private final SellerRepository sellerRepository;
 
     private final CustomerRepository customerRepository;
+
+    private final FoodRepository foodRepository;
     private final AmazonS3 amazonS3;
+
+    public InputStreamResource s3_img_food_return_service(Long seq) throws MalformedURLException {
+        String s3_url = foodRepository.findBySeq(seq).getFoodImgS3Img();
+        Pair<String, String> bucketAndKey = url_patten_parsing(s3_url);
+        InputStreamResource inputStreamResource = get_img_stream_resource(bucketAndKey);
+        return inputStreamResource;
+    }
+
+
+
     public InputStreamResource s3_img_seller_main_return_service(String seller_id) throws MalformedURLException {
         /**
          * 셀러아이디로 이미지 url받기
