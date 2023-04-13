@@ -34,7 +34,7 @@ public class FoodService {
                         .foodName(foodName)
                         .price(price)
                         .sellerSeq((long) sellerSeq)
-                        .foodImgS3Img(s3_url)
+                        .foodImgS3URL(s3_url)
                         .build()
         );
         return "Success";

@@ -43,7 +43,7 @@ public class FoodListController {
     }
 
     @GetMapping("/food-list/detail/{sellerId}")
-    public ResponseEntity  foodList_detail(@PathVariable String sellerId) throws JsonProcessingException {
+    public ResponseEntity  foodList_detail(@PathVariable String sellerId) throws IOException {
         log.info("food-list.Detail >> sellerId={}" , sellerId);
         String json = objectMapper.writeValueAsString(foodListService.get_foodDetail_service(sellerId));
         return ResponseEntity.ok(json);

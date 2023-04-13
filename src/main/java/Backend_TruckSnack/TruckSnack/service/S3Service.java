@@ -29,7 +29,7 @@ public class S3Service {
     private final AmazonS3 amazonS3;
 
     public InputStreamResource s3_img_food_return_service(Long seq) throws MalformedURLException {
-        String s3_url = foodRepository.findBySeq(seq).getFoodImgS3Img();
+        String s3_url = foodRepository.findBySeq(seq).getFoodImgS3URL();
         Pair<String, String> bucketAndKey = url_patten_parsing(s3_url);
         InputStreamResource inputStreamResource = get_img_stream_resource(bucketAndKey);
         return inputStreamResource;
