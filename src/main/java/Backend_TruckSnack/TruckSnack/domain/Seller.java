@@ -3,6 +3,7 @@ package Backend_TruckSnack.TruckSnack.domain;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,7 +25,6 @@ import java.time.LocalDateTime;
 )
 @Data
 public class Seller {
-    public int setSeq;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQ")

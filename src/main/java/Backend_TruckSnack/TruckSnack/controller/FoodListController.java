@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class FoodListController {
     }
 
     @GetMapping("/food-list/{categoryNumber}")
-    public ResponseEntity foodList_category(@PathVariable int categoryNumber) throws JsonProcessingException {
+    public ResponseEntity foodList_category(@PathVariable int categoryNumber) throws IOException {
         log.info("food-list >> category Number: {}",categoryNumber);
         String json = objectMapper.writeValueAsString(foodListService.get_foodList_service(categoryNumber));
         log.info(json);
@@ -42,7 +43,7 @@ public class FoodListController {
     }
 
     @GetMapping("/food-list/detail/{sellerId}")
-    public ResponseEntity  foodList_detail(@PathVariable String sellerId) throws JsonProcessingException {
+    public ResponseEntity  foodList_detail(@PathVariable String sellerId) throws IOException {
         log.info("food-list.Detail >> sellerId={}" , sellerId);
         String json = objectMapper.writeValueAsString(foodListService.get_foodDetail_service(sellerId));
         return ResponseEntity.ok(json);

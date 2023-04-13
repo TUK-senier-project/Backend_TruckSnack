@@ -29,8 +29,8 @@ public class Food {
     private String foodName;
     @Column(name = "PRICE",nullable = false)
     private int price;
-    @Column(name = "FOOD_IMG_S3_URL",nullable = true,length = 100)
-    private String foodImgS3Img;
+    @Column(name = "FOOD_IMG_S3_URL",nullable = true,length = 200)
+    private String foodImgS3URL;
     @Column(name = "IS_CREATED",nullable = false)
     @CreationTimestamp
     private LocalDateTime isCreated;

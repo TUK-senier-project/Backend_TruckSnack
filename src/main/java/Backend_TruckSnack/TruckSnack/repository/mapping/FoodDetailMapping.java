@@ -4,5 +4,5 @@ public interface FoodDetailMapping {
     Long getSeq();
     String getFoodName();
     int getPrice();
-    //String getFoodImgS3Url();
+    String getFoodImgS3URL();
 }

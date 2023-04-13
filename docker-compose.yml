@@ -126,7 +126,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    entrypoint: /wait-for-mysql.sh
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -145,8 +144,10 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
+    volumes:
+      - ./application.yml:/app/application.yml
+    command: ["java", "-jar", "app.jar", "--spring.config.location=file:/app/application.yml"]
     networks:
       - truckSnack-network
   grafana:
