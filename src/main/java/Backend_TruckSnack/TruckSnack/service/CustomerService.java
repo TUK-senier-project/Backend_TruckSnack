@@ -101,7 +101,7 @@ public class CustomerService {
         // CustomerLoginDTO Setting end
 
         //customer get img start
-        if(customerUtil.check_id_util(customer_id)){
+        if(customerUtil.check_img_url_util(customer_id)){
             log.info("login_find_data_service : True" );
             InputStreamResource inputStreamResource = s3Service.s3_img_customer_main_return_service(customer_id);
             String base64EncodedImage = Base64.getEncoder().encodeToString(inputStreamResource.getInputStream().readAllBytes());
