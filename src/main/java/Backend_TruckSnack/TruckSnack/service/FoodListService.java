@@ -146,6 +146,7 @@ public class FoodListService {
             for(int i =1; i<foodDetailList.size() ; i ++){
                 foodDetailDTO.setFoodName(foodDetailList.get(i).getFoodName());
                 foodDetailDTO.setPrice(foodDetailList.get(i).getPrice());
+                foodDetailDTO.setFoodSeq(foodDetailList.get(i).getSeq());
 
                 String s3Url=foodDetailList.get(i).getFoodImgS3URL();
                 if(s3Url != null){

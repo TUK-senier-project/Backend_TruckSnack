@@ -1,6 +1,7 @@
 package Backend_TruckSnack.TruckSnack.repository.mapping;
 
 public interface FoodListMapping {
+    Long getSeq();
     String getId();
     String getBusinessName();
     int getDeadline();
