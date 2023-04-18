@@ -133,7 +133,7 @@ public class FoodListService {
             return null;
         }
         System.out.println("sellerSeq = " + sellerSeq);
-        List<FoodDetailDTO> food_list = new ArrayList<>();
+
         //food 조회
         List<FoodDetailMapping> foodDetailList;
         foodDetailList = foodRepository.findBySellerSeq(sellerSeq);
@@ -142,8 +142,9 @@ public class FoodListService {
         }
         else{
             log.info("푸드 정보있음");
-            FoodDetailDTO foodDetailDTO = new FoodDetailDTO();
+            List<FoodDetailDTO> food_list = new ArrayList<>();
             for(int i =1; i<foodDetailList.size() ; i ++){
+                FoodDetailDTO foodDetailDTO = new FoodDetailDTO();
                 foodDetailDTO.setFoodName(foodDetailList.get(i).getFoodName());
                 foodDetailDTO.setPrice(foodDetailList.get(i).getPrice());
                 foodDetailDTO.setFoodSeq(foodDetailList.get(i).getSeq());
