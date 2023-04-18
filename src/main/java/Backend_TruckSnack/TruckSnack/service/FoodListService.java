@@ -96,6 +96,7 @@ public class FoodListService {
             String temp_seller_id = seller.getId();
 
             // setting
+            foodSellerListDTO.setSellerId(seller.getId());
             foodSellerListDTO.setBusinessName(seller.getBusinessName());
             foodSellerListDTO.setPhoneNumber(seller.getPhoneNumber());
             foodSellerListDTO.setLocation(seller.getLocation());

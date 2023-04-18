@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class FoodSellerListDTO {
+    private String sellerId;
     private String businessName;
     private int deadline;
     private String phoneNumber;
