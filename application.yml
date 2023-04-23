@@ -3,7 +3,9 @@ spring:
     multipart:
       max-file-size: 3MB
       max-request-size: 3MB
-
+  redis:
+    host: localhost
+    port: 6379
 
   jpa:
     open-in-view: true
@@ -24,8 +26,8 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: #accessKey
-      secretKey: #secretkey
+      accessKey: #accesskey
+      secretKey: #secrekey
     s3:
       bucket: truck-snack-bucket
       dir: /img

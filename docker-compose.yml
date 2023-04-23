@@ -145,6 +145,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
       - mysql
+      - redis
     volumes:
       - ./application.yml:/app/application.yml
     command: ["java", "-jar", "app.jar", "--spring.config.location=file:/app/application.yml"]
@@ -185,7 +186,10 @@ services:
       - "8086:8086"
     volumes:
       - influxdb-storage:/var/lib/influxdb
-
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 networks:
   elk:
     driver: bridge
