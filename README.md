@@ -1,4 +1,4 @@
-<h2>증강현실 기반 푸드트럭 관리 시스템</h2>
+<h1>증강현실 기반 푸드트럭 관리 시스템</h1>
 
  ![image](https://github.com/TUK-senier-project/Backend_TruckSnack/assets/76008226/d97f802e-ee6b-4cd9-9f5c-531446d19008)
 
@@ -7,8 +7,7 @@
 - 판매자는 손님의 위치 조회 및 홍보, 관리 서비스를 제공
 
 <h2>System Architecture</h2>
-![image](https://github.com/TUK-senier-project/Backend_TruckSnack/assets/76008226/073d1a99-4e8b-42f0-b897-8b0812eb9ea9)
-
+<img src="https://github.com/TUK-senier-project/Backend_TruckSnack/assets/76008226/073d1a99-4e8b-42f0-b897-8b0812eb9ea9  width="200" height="400"/>
 
 <h2>Pages</h2>
 
@@ -25,15 +24,16 @@
 <h2>ERD</h2>
  
 ![image](https://github.com/TUK-senier-project/Backend_TruckSnack/assets/76008226/bd579c86-80c9-4efe-8970-1a671fc9a045)
-    
+                                                                                                                                                 
+<h2>Developer</h2>
 <table><colgroup><col><col><col></colgroup><tbody><tr><td><p>이름</p></td><td><p>개발분야</p></td><td><p>개인 Github</p></td></tr>
 <tr><td><p>양세진</p></td><td><p>Back-end , front-end</p></td><td><p>https://github.com/Sejin-999</p></td></tr>
 <tr><td><p>박민혁</p></td><td><p>Android</p></td><td><p>https://github.com/min-hyeok-Park</p></td></tr>
 <tr><td><p>유정민</p></td><td><p>Android</p></td><td><p>https://github.com/YooJungMin222</p></td></tr>
 </tbody></table>
     
-    
-    
+
+<h2>Server API</h2>
     
 <p>&lt;Customer 회원가입&gt;</p>
 
