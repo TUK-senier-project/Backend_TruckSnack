@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 200vh; /* 사용자 화면 높이에 맞춤 */
+}
+
+.header,
+.main,
+.intro,
+.footer {
+    flex: 2;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+
+.main,
+.intro {
+    flex: 6; 
+}
+
+.intro{
+    flex: 8; 
+    display: flex;
+    div{
+        flex: 1;
+    }
+    >:last-child{
+        flex: 2;
+    }
+    .intro_imgBox{
+        width: 100%;
+        height: 100%;
+        background-image: url('/img/판매자.gif'); /* 이미지 경로 지정 */
+        background-size: cover; /* 배경 이미지를 커버하도록 설정 */
+        background-position: center; /* 이미지를 가운데 정렬 */
+    }
+    .intro_textBox{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        .title{
+            font-size: 5rem;
+            padding: 1.3em;
+        }
+        .text{
+            font-size: 2.2em;
+        }
+    }
+}
