@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +32,18 @@ public class AdminService {
             return "success";
         }
 
+    }
+
+    public String adminLogin(String id , String password){
+        if(adminRepositroy.existsById(id)){
+            Optional<Admin> admin = adminRepositroy.findById(id);
+            if(admin.get().getPassword().equals(password)){
+                return "success";
+            }else{
+                return "password wrong";
+            }
+        }else{
+            return "id not exists";
+        }
     }
 }

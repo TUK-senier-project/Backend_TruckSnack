@@ -21,22 +21,37 @@ public class AdminController {
     }
     @GetMapping("/signup")
     public String showSignupForm() {
-        return "signup"; // signup.html 템플릿을 보여줍니다.
+        return "signup";
     }
-
+    @GetMapping("/adminHome")
+    public String adminHome() {
+        return "admin";
+    }
     @PostMapping("/signup")
     public String processSignup(Admin admin, Model model) {
         String result = adminService.adminSignUp(admin);
         if ("success".equals(result)) {
-            return "redirect:/admin/login"; // 회원가입 성공 시 로그인 페이지로 리다이렉트합니다.
+            return "redirect:/admin/login";
         } else {
             model.addAttribute("error", result);
-            return "signup"; // 회원가입 실패 시 다시 회원가입 폼을 보여줍니다.
+            return "signup";
         }
     }
 
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(String id , String password, Model model) {
+        String result = adminService.adminLogin(id, password);
+
+        if ("success".equals(result)) {
+            return "redirect:/admin/adminHome";
+        } else {
+            model.addAttribute("error", result);
+            return "login";
+        }
     }
 }
