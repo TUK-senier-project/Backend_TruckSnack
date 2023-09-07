@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Chat</title>
+</head>
+<body>
+<h1>WebSocket Chat</h1>
+<div id="chat">
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    const socket = new WebSocket("ws://localhost:8080/chat"); // WebSocket 서버 엔드포인트 주소를 여기에 입력
+
+    socket.onopen = function(event) {
+        console.log("WebSocket is open.");
+
+        // 채팅방에 들어오면 모든 로그를 가져오는 요청 보내기
+        const request = {
+            type: 'joinRoom',
+            roomId: '1' // 채팅방 식별자를 여기에 입력
+        };
+        socket.send(JSON.stringify(request));
+    };
+
+    socket.onmessage = function(event) {
+        const message = JSON.parse(event.data);
+        if (message.type === 'chatLog') {
+            displayChatLog(message.chatLog);
+        } else {
+            displayMessage(message.sender + ": " + message.content);
+        }
+    };
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            console.log("WebSocket is closed cleanly, code=" + event.code + ", reason=" + event.reason);
+        } else {
+            console.error("WebSocket connection failed.");
+        }
+    };
+
+    function sendMessage() {
+        const messageInput = document.getElementById("message");
+        const message = messageInput.value;
+        const sender = "You"; // 사용자 이름 또는 ID
+        const chatMessage = {
+            content: message,
+            sender: sender
+        };
+
+        socket.send(JSON.stringify(chatMessage));
+        displayMessage(sender + ": " + message);
+        messageInput.value = "";
+    }
+
+    function displayMessage(message) {
+        const messagesDiv = document.getElementById("messages");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messagesDiv.appendChild(messageElement);
+    }
+
+    function displayChatLog(chatLog) {
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.innerHTML = ""; // 이전 메시지 삭제
+
+        chatLog.forEach(function(message) {
+            const messageElement = document.createElement("div");
+            messageElement.textContent = message.sender + ": " + message.content;
+            messagesDiv.appendChild(messageElement);
+        });
+    }
+</script>
+</body>
+</html>
