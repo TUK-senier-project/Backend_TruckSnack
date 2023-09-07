@@ -47,7 +47,7 @@ public class SellerService {
 
     public List<ReviewListMapping> reviewList_seller_service(String seller_id){
         List<ReviewListMapping> Review_list;
-        Review_list = communicationRepositroy.findBySellerId(seller_id);
+        Review_list = communicationRepositroy.findBySellerIdAndIsDeleted(seller_id , false);
 
         return Review_list;
     }

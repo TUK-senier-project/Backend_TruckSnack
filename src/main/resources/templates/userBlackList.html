@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Black List</title>
+</head>
+<body>
+<form action="/admin/userBlackList" method="post">
+    <button type="submit">Fetch User Black List</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Seq</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Location</th>
+        <th>Created Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${userBlackList}">
+        <td th:text="${customer.seq}"></td>
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.name}"></td>
+        <td th:text="${customer.phoneNumber}"></td>
+        <td th:text="${customer.location}"></td>
+        <td th:text="${customer.isCreated}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

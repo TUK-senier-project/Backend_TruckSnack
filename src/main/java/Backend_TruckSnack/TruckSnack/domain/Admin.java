@@ -29,4 +29,6 @@ public class Admin {
     private String password;
     @Column(name = "nickName")
     private String nickName;
+    @Column(name = "checkSome")
+    private boolean checkSome;
 }

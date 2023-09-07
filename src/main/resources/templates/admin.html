@@ -6,18 +6,37 @@
 </head>
 <body>
 <div class="container">
-  <div class="adminList">
+  <div class="adminList" id="adminListElementAccess">
     <span>다른관리자 승인</span>
   </div>
-  <div class="adminList">
-    <span>댓글 확인</span>
+  <div class="adminList" id="adminListElement">
+    <span>리뷰 확인</span>
   </div>
-  <div class="adminList">
+  <div class="adminList" id="adminListElementBlackList">
     <span>유저 블랙리스트</span>
   </div>
   <div class="adminList">
     <span>요청 확인</span>
   </div>
 </div>
+
+<script>
+  const adminListElement = document.getElementById('adminListElement');
+  const adminListElementAccess = document.getElementById('adminListElementAccess');
+  const adminListElementBlackList = document.getElementById('adminListElementBlackList');
+
+  adminListElement.addEventListener('click', function() {
+    window.location.href = '/admin/adminReview';
+  });
+
+  adminListElementAccess.addEventListener('click', function() {
+    window.location.href = '/admin/adminAccess';
+  });
+
+  adminListElementBlackList.addEventListener('click', function() {
+    window.location.href = '/admin/userBlackListSub';
+  });
+</script>
+
 </body>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div th:if="${reviewList != null}">
+
+    <table>
+        <thead>
+        <tr>
+            <th>Customer Nickname</th>
+            <th>Grade</th>
+            <th>Review</th>
+            <th>Created Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review, iterStat : ${reviewList}">
+            <td th:text="${review.seq}"></td>
+            <td th:text="${review.customerNickName}"></td>
+            <td th:text="${review.grade}"></td>
+            <td th:text="${review.review}"></td>
+            <td th:text="${review.isCreated}"></td>
+            <td>
+                <form th:action="@{/admin/deleteReview}" method="post">
+                    <input type="hidden" name="seq" th:value="${review.seq}" />
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${reviewList != null}">
+    <p>No reviews available.</p>
+</div>
+</body>
+</html>
